@@ -1,6 +1,6 @@
-type DataI = string[] | string;
+export type DataI = string[] | string;
 
-interface BlockI {
+export interface BlockI {
   timestamp: number | Date | string;
   lastHash: string;
   hash: string;

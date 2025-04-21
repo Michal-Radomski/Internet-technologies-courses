@@ -1,4 +1,5 @@
 import { GENESIS_DATA } from "./config";
+import { BlockI, DataI } from "./Interfaces";
 
 class Block {
   timestamp: number | Date | string;
@@ -6,7 +7,7 @@ class Block {
   hash: string;
   data: DataI;
   constructor({ timestamp, lastHash, hash, data }: BlockI) {
-    this.timestamp = timestamp;
+    this.timestamp = timestamp; //* timestamp on the right: incoming timestamp
     this.lastHash = lastHash;
     this.hash = hash;
     this.data = data;
@@ -26,4 +27,4 @@ class Block {
   }
 }
 
-export default Block;
+export default Block; //* commonjs: module.exports = Block;

@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "dev": "nodemon index.ts",
-    "test": "jest"
+    "test": "jest --watchAll"
   },
   "keywords": [],
   "author": "Michal Radomski <michalra@op.pl>",

@@ -8,7 +8,7 @@ describe("Block", (): void => {
   const lastHash = "foo-hash";
   const hash = "bar-hash";
   const data = ["blockchain", "data"];
-  const block = new Block({ timestamp, lastHash, hash, data });
+  const block: Block = new Block({ timestamp, lastHash, hash, data });
 
   it("has a timestamp, lastHash, hash, and a data property", (): void => {
     expect(block.timestamp).toEqual(timestamp);

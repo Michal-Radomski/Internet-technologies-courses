@@ -1,3 +1,5 @@
+import { BlockI, DataI } from "./Interfaces";
+
 const GENESIS_DATA: BlockI = {
   timestamp: 1,
   lastHash: "-----",
