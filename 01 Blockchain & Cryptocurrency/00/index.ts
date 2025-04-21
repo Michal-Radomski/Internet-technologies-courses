@@ -50,3 +50,21 @@ fooBlockChain.addBlock("one");
 fooBlockChain.addBlock("two");
 fooBlockChain.addBlock("three");
 console.log("fooBlockChain:", fooBlockChain);
+
+///-
+class Lion {
+  name: string;
+  hairColor: string;
+  constructor(name: string, hairColor: string) {
+    this.name = name;
+    this.hairColor = hairColor;
+  }
+
+  logName(): void {
+    console.log("Roar! I'm:", this.name);
+  }
+}
+
+const goldenLion: Lion = new Lion("Mufasa", "golden");
+console.log("goldenLion:", goldenLion);
+goldenLion.logName(); // Roar! I'm: Mufasa
