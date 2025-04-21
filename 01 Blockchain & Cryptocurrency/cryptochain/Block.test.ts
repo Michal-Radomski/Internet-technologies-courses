@@ -2,7 +2,9 @@ import { describe, expect, it } from "@jest/globals";
 
 import Block from "./Block";
 import { GENESIS_DATA } from "./config";
+import cryptoHash from "./crypto-hash";
 
+//* current value === expected value!
 describe("Block", (): void => {
   const timestamp = "a-date";
   const lastHash = "foo-hash";
@@ -27,9 +29,11 @@ describe("Block", (): void => {
     it("returns the genesis data", (): void => {
       expect(genesisBlock).toEqual(GENESIS_DATA);
     });
+
+    console.log("genesisBlock:", genesisBlock);
   });
 
-  describe("mineBlock", (): void => {
+  describe("mineBlock()", (): void => {
     const lastBlock: Block = Block.genesis();
     const data = "mined data";
     const minedBlock: Block = Block.mineBlock({ lastBlock, data });
@@ -48,6 +52,18 @@ describe("Block", (): void => {
 
     it("sets a `timestamp`", (): void => {
       expect(minedBlock.timestamp).not.toEqual(undefined);
+    });
+
+    it("creates a SHA-256 `hash` based on the proper inputs", () => {
+      expect(minedBlock.hash).toEqual(
+        cryptoHash(
+          minedBlock.timestamp as string,
+          // minedBlock.nonce,
+          // minedBlock.difficulty,
+          lastBlock.hash,
+          data
+        )
+      );
     });
   });
 });
