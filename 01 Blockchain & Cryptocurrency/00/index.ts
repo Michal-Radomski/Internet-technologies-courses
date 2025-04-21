@@ -13,3 +13,40 @@ const sha256 = (content: string): string => {
 // Example usage:
 const hash: string = sha256("Hello, World!");
 console.log("hash:", hash);
+
+//* BlockChain
+const lightingChain = (data: string) => {
+  return data + "*";
+};
+
+class Block {
+  data: string;
+  hash: string;
+  lastHash: string;
+  constructor(data: string, hash: string, lastHash: string) {
+    this.data = data;
+    this.hash = hash;
+    this.lastHash = lastHash;
+  }
+}
+
+class BlockChain {
+  chain: Block[];
+  constructor() {
+    const genesis: Block = new Block("gen-data", "gen-hash", "gen-lastHash");
+    this.chain = [genesis];
+  }
+
+  addBlock(data: string): void {
+    const lastHash: string = this.chain[this.chain.length - 1].hash;
+    const hash: string = lightingChain(data + lastHash);
+    const block: Block = new Block(data, hash, lastHash);
+    this.chain.push(block);
+  }
+}
+
+const fooBlockChain: BlockChain = new BlockChain();
+fooBlockChain.addBlock("one");
+fooBlockChain.addBlock("two");
+fooBlockChain.addBlock("three");
+console.log("fooBlockChain:", fooBlockChain);
