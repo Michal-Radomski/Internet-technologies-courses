@@ -1,2 +1,3 @@
-# new-repo
-new courses repo
+# Internet technologies courses
+
+Internet technologies courses from Udemy.com
