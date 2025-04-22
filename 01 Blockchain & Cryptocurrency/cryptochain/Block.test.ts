@@ -30,7 +30,7 @@ describe("Block", (): void => {
       expect(genesisBlock).toEqual(GENESIS_DATA);
     });
 
-    console.log("genesisBlock:", genesisBlock);
+    // console.log("genesisBlock:", genesisBlock);
   });
 
   describe("mineBlock()", (): void => {

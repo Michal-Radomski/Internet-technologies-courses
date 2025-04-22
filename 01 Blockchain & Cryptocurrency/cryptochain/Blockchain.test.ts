@@ -4,7 +4,6 @@ import { Mock, UnknownFunction } from "jest-mock";
 import Blockchain from "./Blockchain";
 import Block from "./Block";
 
-//* 1
 describe("Blockchain", (): void => {
   let blockchain: Blockchain, newChain: Blockchain, originalChain: Block[];
 
@@ -15,6 +14,7 @@ describe("Blockchain", (): void => {
     originalChain = blockchain.chain as Block[];
   });
 
+  //* 1
   it("contains a `chain` Array instance", (): void => {
     expect(blockchain.chain instanceof Array).toBe(true);
   });
@@ -97,6 +97,7 @@ describe("Blockchain", (): void => {
       it("logs an error", (): void => {
         expect(errorMock).toHaveBeenCalled();
       });
+      // console.log("errorMock was fired");
     });
 
     describe("when the new chain is longer", (): void => {
@@ -109,19 +110,18 @@ describe("Blockchain", (): void => {
       describe("and the chain is invalid", (): void => {
         beforeEach((): void => {
           newChain.chain[2].hash = "some-fake-hash";
-
           blockchain.replaceChain(newChain.chain);
         });
 
         it("does not replace the chain", (): void => {
           blockchain.replaceChain(newChain.chain);
-
           expect(blockchain.chain).toEqual(originalChain);
         });
 
         it("logs an error", (): void => {
           expect(errorMock).toHaveBeenCalled();
         });
+        // console.log("errorMock was fired");
       });
 
       describe("and the chain is valid", (): void => {
@@ -136,6 +136,7 @@ describe("Blockchain", (): void => {
         it("logs about the chain replacement", (): void => {
           expect(logMock).toHaveBeenCalled();
         });
+        // console.log("logMock was fired");
       });
     });
   });
