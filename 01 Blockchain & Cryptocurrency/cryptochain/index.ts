@@ -1,7 +1,14 @@
 import Block from "./Block";
+import Blockchain from "./Blockchain";
 
-const block1: Block = new Block({ timestamp: Date.now(), lastHash: "lastHash", hash: "hash", data: ["data"] });
-console.log("block1:", block1);
+const block: Block = new Block({ timestamp: Date.now(), lastHash: "lastHash", hash: "hash", data: ["data"] });
+console.log("block:", block);
+
+const blockchain: Blockchain = new Blockchain();
+blockchain.addBlock({ data: "Data_1" });
+blockchain.addBlock({ data: "Data_2" });
+blockchain.addBlock({ data: "Data_3" });
+console.log("blockchain:", blockchain);
 
 //* Reminder
 // const obj1 = { a: 1 };
