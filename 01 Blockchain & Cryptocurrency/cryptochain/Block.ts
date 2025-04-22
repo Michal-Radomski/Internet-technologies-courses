@@ -7,6 +7,7 @@ class Block {
   lastHash: string;
   hash: string;
   data: DataI;
+  new?: string;
   constructor({ timestamp, lastHash, hash, data }: BlockI) {
     this.timestamp = timestamp; //* timestamp on the right: incoming timestamp
     this.lastHash = lastHash;
