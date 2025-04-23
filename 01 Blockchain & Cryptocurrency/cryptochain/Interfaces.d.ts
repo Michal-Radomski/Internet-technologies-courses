@@ -5,4 +5,6 @@ export interface BlockI {
   lastHash: string;
   hash: string;
   data: DataI;
+  nonce?: number;
+  difficulty?: number;
 }

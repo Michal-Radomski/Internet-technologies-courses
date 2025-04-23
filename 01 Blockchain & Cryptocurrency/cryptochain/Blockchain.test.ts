@@ -3,6 +3,8 @@ import { Mock, UnknownFunction } from "jest-mock";
 
 import Blockchain from "./Blockchain";
 import Block from "./Block";
+import { DataI } from "./Interfaces";
+import cryptoHash from "./crypto-hash";
 
 describe("Blockchain", (): void => {
   let blockchain: Blockchain, newChain: Blockchain, originalChain: Block[];
@@ -58,6 +60,32 @@ describe("Blockchain", (): void => {
       describe("and the chain contains a block with an invalid field", (): void => {
         it("returns false", (): void => {
           blockchain.chain[2].data = "some-bad-and-evil-data";
+
+          expect(Blockchain.isValidChain(blockchain.chain)).toBe(false);
+        });
+      });
+
+      describe("and the chain contains a block with a jumped difficulty", (): void => {
+        it("returns false", (): void => {
+          const lastBlock: Block = blockchain.chain[blockchain.chain.length - 1];
+          const lastHash: string = lastBlock.hash;
+          const timestamp: number = Date.now();
+          const nonce: number = 0;
+          const data = [] as DataI;
+          const difficulty: number = lastBlock.difficulty - 3;
+
+          const hash: string = cryptoHash(timestamp, lastHash, difficulty, nonce, data);
+
+          const badBlock: Block = new Block({
+            timestamp,
+            lastHash,
+            hash,
+            nonce,
+            difficulty,
+            data,
+          });
+
+          blockchain.chain.push(badBlock);
 
           expect(Blockchain.isValidChain(blockchain.chain)).toBe(false);
         });
