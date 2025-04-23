@@ -14,6 +14,9 @@
   "type": "commonjs",
   "devDependencies": {
     "@jest/globals": "^29.7.0",
+    "@types/body-parser": "^1.19.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
     "@types/hex-to-binary": "^1.0.2",
     "@types/jest": "^29.5.14",
     "jest": "^29.7.0",
@@ -22,6 +25,9 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "hex-to-binary": "^1.0.1"
   }
 }
