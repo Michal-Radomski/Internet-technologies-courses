@@ -82,3 +82,15 @@ httpServer.listen({ port: portHTTP }, () => {
 
 // const mood = "Happy! ";
 // console.log(`I feel ${mood.repeat(3)}`); // Expected output: "I feel Happy! Happy! Happy!"
+
+// let i = 0;
+// do {
+//   i += 1;
+//   console.log({ i });
+// } while (i < 5);
+
+// let j = 0;
+// while (j < 5) {
+//   j += 1;
+//   console.log({ j });
+// }
