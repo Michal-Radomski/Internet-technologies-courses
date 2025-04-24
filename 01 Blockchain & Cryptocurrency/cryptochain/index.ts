@@ -4,15 +4,24 @@ import express, { Express, Request, Response } from "express";
 // import hexToBinary from "hex-to-binary";
 import bodyParser from "body-parser";
 import cors from "cors";
+import request from "request";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 // import Block from "./Block";
 import Blockchain from "./Blockchain";
 import { DataI } from "./Interfaces";
+import PubSub from "./pubsub";
+
+const blockchain: Blockchain = new Blockchain();
+const pubsub: PubSub = new PubSub({ blockchain });
+
+//* Port
+const DEFAULT_PORT = (process.env.PORT || 3000) as number;
+const ROOT_NODE_ADDRESS = `http://localhost:${DEFAULT_PORT}`;
 
 //* The server
 const app: Express = express();
-
-const blockchain: Blockchain = new Blockchain();
 
 const corsOptions = {
   origin: true,
@@ -32,9 +41,8 @@ app.get("/api/blocks", (req: Request, res: Response) => {
 
 app.post("/api/mine", (req: Request, res: Response) => {
   const { data } = req.body as { data: DataI };
-
   blockchain.addBlock({ data });
-
+  pubsub.broadcastChain();
   res.redirect("/api/blocks");
 });
 
@@ -48,14 +56,35 @@ app.get("/test", (req: Request, res: Response) => {
   res.send("<h1 style='color:blue;text-align:center'>API is running</h1>");
 });
 
-//* Port
-const portHTTP = (process.env.PORT || 3000) as number;
+//* Blockchain
+const syncChains = (): void => {
+  request({ url: `${ROOT_NODE_ADDRESS}/api/blocks` }, (error, response, body) => {
+    if (!error && response.statusCode === 200) {
+      const rootChain = JSON.parse(body);
+
+      console.log("Replace chain on a sync with", rootChain);
+      blockchain.replaceChain(rootChain);
+    }
+  });
+};
+
+let PEER_PORT;
+
+if (process.env.GENERATE_PEER_PORT === "true") {
+  PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
+}
+
+const PORT: number = PEER_PORT || DEFAULT_PORT;
 
 const httpServer = http.createServer(app);
-httpServer.listen({ port: portHTTP }, () => {
-  console.log(`🚀 Server is listening at http://localhost:${portHTTP}`);
+httpServer.listen({ port: PORT }, () => {
+  console.log(`🚀 Server is listening at http://localhost:${PORT}`);
   // For testing only
   console.log("Current Time:", new Date().toLocaleTimeString());
+
+  if (PORT !== DEFAULT_PORT) {
+    syncChains();
+  }
 });
 
 //* Testing

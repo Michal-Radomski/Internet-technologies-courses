@@ -19,6 +19,7 @@
     "@types/express": "^5.0.1",
     "@types/hex-to-binary": "^1.0.2",
     "@types/jest": "^29.5.14",
+    "@types/request": "^2.48.12",
     "jest": "^29.7.0",
     "ts-jest": "^29.3.2",
     "ts-node": "^10.9.2",
@@ -27,7 +28,10 @@
   "dependencies": {
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "hex-to-binary": "^1.0.1"
+    "hex-to-binary": "^1.0.1",
+    "redis": "^4.7.0",
+    "request": "^2.88.2"
   }
 }
