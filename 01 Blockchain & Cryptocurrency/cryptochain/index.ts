@@ -12,9 +12,12 @@ dotenv.config();
 import Blockchain from "./Blockchain";
 import { DataI } from "./Interfaces";
 import PubSub from "./Pubsub";
+import Block from "./Block";
 
 const blockchain: Blockchain = new Blockchain();
 const pubsub: PubSub = new PubSub({ blockchain });
+//* Test
+// setTimeout(() => pubsub.broadcastChain(), 1000);
 
 //* Port
 const DEFAULT_PORT = (process.env.PORT || 3000) as number;
@@ -56,11 +59,12 @@ app.get("/test", (req: Request, res: Response) => {
   res.send("<h1 style='color:blue;text-align:center'>API is running</h1>");
 });
 
-//* Blockchain
+//* Blockchain - get request
+// Todo: replace with axios
 const syncChains = (): void => {
   request({ url: `${ROOT_NODE_ADDRESS}/api/blocks` }, (error, response, body) => {
     if (!error && response.statusCode === 200) {
-      const rootChain = JSON.parse(body);
+      const rootChain = JSON.parse(body) as Block[];
 
       console.log("Replace chain on a sync with", rootChain);
       blockchain.replaceChain(rootChain);
@@ -71,7 +75,7 @@ const syncChains = (): void => {
 let PEER_PORT;
 
 if (process.env.GENERATE_PEER_PORT === "true") {
-  PEER_PORT = DEFAULT_PORT + Math.ceil(Math.random() * 1000);
+  PEER_PORT = (DEFAULT_PORT + Math.ceil(Math.random() * 1000)) as number;
 }
 
 const PORT: number = PEER_PORT || DEFAULT_PORT;

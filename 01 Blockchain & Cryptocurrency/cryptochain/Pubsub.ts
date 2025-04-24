@@ -1,8 +1,9 @@
-import { createClient } from "redis";
+import { createClient, RedisClientType } from "redis";
 import * as dotenv from "dotenv";
 dotenv.config();
 
 import Blockchain from "./Blockchain";
+import Block from "./Block";
 
 const CHANNELS = {
   TEST: "TEST",
@@ -16,8 +17,8 @@ const redisConfig = {
 
 class PubSub {
   blockchain: Blockchain;
-  publisher: any;
-  subscriber: any;
+  publisher: RedisClientType;
+  subscriber: RedisClientType;
   constructor({ blockchain }: { blockchain: Blockchain }) {
     this.blockchain = blockchain;
 
@@ -51,7 +52,7 @@ class PubSub {
   handleMessage(channel: string, message: string): void {
     console.log(`Message received. Channel: ${channel}. Message: ${message}`);
 
-    const parsedMessage = JSON.parse(message);
+    const parsedMessage = JSON.parse(message) as Block[];
 
     if (channel === CHANNELS.BLOCKCHAIN) {
       this.blockchain.replaceChain(parsedMessage);
@@ -69,6 +70,15 @@ class PubSub {
   async publish({ channel, message }: { channel: string; message: string }): Promise<void> {
     await this.publisher.publish(channel, message);
   }
+
+  //* Doesn't work!
+  // async publish({ channel, message }: { channel: string; message: string }): Promise<void> {
+  //   await this.subscriber.unsubscribe(channel, async (): Promise<void> => {
+  //     await this.publisher.publish(channel, message, async (): Promise<void> => {
+  //       await this.subscriber.subscribe(channel);
+  //     });
+  //   });
+  // }
 
   async broadcastChain(): Promise<void> {
     await this.publish({
