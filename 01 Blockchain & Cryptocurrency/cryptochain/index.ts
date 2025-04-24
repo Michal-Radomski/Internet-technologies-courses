@@ -11,7 +11,7 @@ dotenv.config();
 // import Block from "./Block";
 import Blockchain from "./Blockchain";
 import { DataI } from "./Interfaces";
-import PubSub from "./pubsub";
+import PubSub from "./Pubsub";
 
 const blockchain: Blockchain = new Blockchain();
 const pubsub: PubSub = new PubSub({ blockchain });
