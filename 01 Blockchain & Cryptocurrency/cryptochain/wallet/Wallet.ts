@@ -13,14 +13,16 @@ class Wallet {
   constructor() {
     this.balance = STARTING_BALANCE;
     this.keyPair = ec.genKeyPair();
-    this.publicKey = this.keyPair.getPublic().encode("hex", true);
+    this.publicKey = this.keyPair.getPublic().encode("hex", false);
+    // console.log("this.keyPair:", this.keyPair);
+    // console.log("this.publicKey:", this.publicKey);
   }
 
-  sign(data: DataI) {
+  sign(data: DataI): EC.Signature {
     return this.keyPair.sign(cryptoHash(data));
   }
 
-  createTransaction({ recipient, amount }: { recipient: string; amount: number }) {
+  createTransaction({ recipient, amount }: { recipient: string; amount: number }): Transaction {
     if (amount > this.balance) {
       throw new Error("Amount exceeds balance");
     }
