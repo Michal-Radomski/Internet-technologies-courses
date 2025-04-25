@@ -7,7 +7,8 @@
     "dev": "nodemon index.ts",
     "dev-peer": "cross-env GENERATE_PEER_PORT='true' nodemon index.ts",
     "avg": "nodemon ./scripts/average-work.ts",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "test:wallet": "jest wallet --watch"
   },
   "keywords": [],
   "author": "Michal Radomski <michalra@op.pl>",
@@ -17,23 +18,26 @@
     "@jest/globals": "^29.7.0",
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
+    "@types/elliptic": "^6.4.18",
     "@types/express": "^5.0.1",
     "@types/hex-to-binary": "^1.0.2",
     "@types/jest": "^29.5.14",
     "@types/request": "^2.48.12",
+    "cross-env": "^7.0.3",
     "jest": "^29.7.0",
     "ts-jest": "^29.3.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3",
-    "cross-env": "^7.0.3"
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
+    "elliptic": "^6.6.1",
     "express": "^5.1.0",
     "hex-to-binary": "^1.0.1",
     "redis": "^4.7.0",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "uuid": "^11.1.0"
   }
 }
