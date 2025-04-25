@@ -3,7 +3,7 @@ import { ec as EC } from "elliptic";
 import { DataI } from "../Interfaces";
 import cryptoHash from "./crypto-hash";
 
-export const ec: EC = new EC("secp256k1");
+export const ec: EC = new EC("secp256k1"); //* Used by Bitcoin
 
 const verifySignature = ({
   publicKey,
