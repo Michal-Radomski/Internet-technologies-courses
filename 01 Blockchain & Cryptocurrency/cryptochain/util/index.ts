@@ -1,4 +1,4 @@
-import { ec as EC } from "elliptic";
+import { ec as EC } from "elliptic"; //* CommonJS: const EC = require('elliptic').ec;
 
 import { DataI } from "../Interfaces";
 import cryptoHash from "./crypto-hash";
