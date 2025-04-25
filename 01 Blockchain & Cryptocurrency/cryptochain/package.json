@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon index.ts",
     "dev-peer": "cross-env GENERATE_PEER_PORT='true' nodemon index.ts",
-    "avg": "nodemon average-work.ts",
+    "avg": "nodemon ./scripts/average-work.ts",
     "test": "jest --watchAll"
   },
   "keywords": [],

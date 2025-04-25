@@ -9,10 +9,10 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 // import Block from "./Block";
-import Blockchain from "./Blockchain";
+import Blockchain from "./blockchain/Blockchain";
 import { DataI } from "./Interfaces";
-import PubSub from "./Pubsub";
-import Block from "./Block";
+import PubSub from "./app/Pubsub";
+import Block from "./blockchain/Block";
 
 const blockchain: Blockchain = new Blockchain();
 const pubsub: PubSub = new PubSub({ blockchain });

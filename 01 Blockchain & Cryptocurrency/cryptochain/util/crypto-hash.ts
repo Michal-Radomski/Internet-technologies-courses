@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { DataI } from "./Interfaces";
+import { DataI } from "../Interfaces";
 
 const cryptoHash = (...inputs: (DataI | Date | string | number)[]): string => {
   // console.log("inputs:", inputs);

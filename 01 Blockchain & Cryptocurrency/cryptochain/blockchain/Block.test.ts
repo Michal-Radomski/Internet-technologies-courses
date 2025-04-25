@@ -2,8 +2,8 @@ import { describe, expect, it } from "@jest/globals";
 import hexToBinary from "hex-to-binary";
 
 import Block from "./Block";
-import { GENESIS_DATA, MINE_RATE } from "./config";
-import cryptoHash from "./crypto-hash";
+import { GENESIS_DATA, MINE_RATE } from "../config";
+import cryptoHash from "../util/crypto-hash";
 
 //* current value === expected value!
 describe("Block", (): void => {

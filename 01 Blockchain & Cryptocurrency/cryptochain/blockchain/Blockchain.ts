@@ -1,6 +1,6 @@
 import Block from "./Block";
-import cryptoHash from "./crypto-hash";
-import { DataI } from "./Interfaces";
+import cryptoHash from "../util/crypto-hash";
+import { DataI } from "../Interfaces";
 
 class Blockchain {
   chain: Block[];

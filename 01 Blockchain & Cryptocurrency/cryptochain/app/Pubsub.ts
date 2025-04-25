@@ -2,8 +2,8 @@ import { createClient, RedisClientType } from "redis";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import Blockchain from "./Blockchain";
-import Block from "./Block";
+import Blockchain from "../blockchain/Blockchain";
+import Block from "../blockchain/Block";
 
 const CHANNELS = {
   TEST: "TEST",

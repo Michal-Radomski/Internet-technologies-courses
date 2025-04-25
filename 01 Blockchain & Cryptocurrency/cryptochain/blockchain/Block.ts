@@ -1,8 +1,8 @@
 import hexToBinary from "hex-to-binary";
 
-import { GENESIS_DATA, MINE_RATE } from "./config";
-import cryptoHash from "./crypto-hash";
-import { BlockI, DataI } from "./Interfaces";
+import { GENESIS_DATA, MINE_RATE } from "../config";
+import cryptoHash from "../util/crypto-hash";
+import { BlockI, DataI } from "../Interfaces";
 
 class Block {
   timestamp: number | Date | string;

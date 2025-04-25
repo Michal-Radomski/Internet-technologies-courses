@@ -3,8 +3,8 @@ import { Mock, UnknownFunction } from "jest-mock";
 
 import Blockchain from "./Blockchain";
 import Block from "./Block";
-import { DataI } from "./Interfaces";
-import cryptoHash from "./crypto-hash";
+import { DataI } from "../Interfaces";
+import cryptoHash from "../util/crypto-hash";
 
 describe("Blockchain", (): void => {
   let blockchain: Blockchain, newChain: Blockchain, originalChain: Block[];
