@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import request from "request";
 import * as dotenv from "dotenv";
+// import { v1 as uuid } from "uuid";
 dotenv.config();
 
 // import Block from "./Block";
@@ -13,9 +14,14 @@ import Blockchain from "./blockchain/Blockchain";
 import { DataI } from "./Interfaces";
 import PubSub from "./app/Pubsub";
 import Block from "./blockchain/Block";
+import TransactionPool from "./wallet/TransactionPool";
+import Wallet from "./wallet/Wallet";
+import Transaction from "./wallet/Transaction";
 
+const transactionPool: TransactionPool = new TransactionPool();
 const blockchain: Blockchain = new Blockchain();
-const pubsub: PubSub = new PubSub({ blockchain });
+const wallet: Wallet = new Wallet();
+const pubsub: PubSub = new PubSub({ blockchain, transactionPool });
 //* Test
 // setTimeout(() => pubsub.broadcastChain(), 1000);
 
@@ -49,6 +55,32 @@ app.post("/api/mine", (req: Request, res: Response) => {
   res.redirect("/api/blocks");
 });
 
+// @ts-ignore
+app.post("/api/transact", (req: Request, res: Response) => {
+  const { amount, recipient } = req.body as { amount: number; recipient: string };
+
+  try {
+    let transaction = transactionPool.existingTransaction({ inputAddress: wallet.publicKey }) as Transaction;
+
+    if (transaction) {
+      transaction.update({ senderWallet: wallet, recipient, amount });
+    } else {
+      transaction = wallet.createTransaction({ recipient, amount }) as Transaction;
+    }
+
+    transactionPool.setTransaction(transaction);
+    pubsub.broadcastTransaction(transaction);
+    return res.status(200).json({ type: "success", transaction });
+  } catch (error) {
+    return res.status(400).json({ type: "error", message: (error as Error).message });
+  }
+});
+
+app.get("/api/transaction-pool-map", (req, res) => {
+  console.log("req.ip:", req.ip);
+  res.json(transactionPool.transactionMap);
+});
+
 //* Favicon
 app.get("/favicon.ico", (_req: Request, res: Response) => {
   res.sendFile(path.join(__dirname + "/favicon.svg"));
@@ -68,6 +100,15 @@ const syncChains = (): void => {
 
       console.log("Replace chain on a sync with", rootChain);
       blockchain.replaceChain(rootChain);
+    }
+  });
+
+  request({ url: `${ROOT_NODE_ADDRESS}/api/transaction-pool-map` }, (error, response, body) => {
+    if (!error && response.statusCode === 200) {
+      const rootTransactionPoolMap = JSON.parse(body);
+
+      console.log("Replace transaction pool map on a sync with", rootTransactionPoolMap);
+      transactionPool.setMap(rootTransactionPoolMap);
     }
   });
 };
@@ -127,3 +168,6 @@ httpServer.listen({ port: PORT }, () => {
 //   j += 1;
 //   console.log({ j });
 // }
+
+// const id = uuid();
+// console.log("id:", id);

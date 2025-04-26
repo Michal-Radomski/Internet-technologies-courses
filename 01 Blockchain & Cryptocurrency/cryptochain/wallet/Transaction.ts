@@ -1,4 +1,4 @@
-import { v1 as uuid } from "uuid";
+import { v1 as uuid } from "uuid"; //* V1 - based on timestamp
 import { ec as EC } from "elliptic";
 
 import verifySignature from "../util";
@@ -28,6 +28,7 @@ class Transaction {
 
     outputMap[recipient] = amount;
     outputMap[senderWallet.publicKey] = senderWallet.balance - amount;
+    // console.log("outputMap:", outputMap);
 
     return outputMap;
   }
@@ -72,7 +73,9 @@ class Transaction {
       outputMap,
     } = transaction;
 
-    const outputTotal: number = Object.values(outputMap).reduce((total, outputAmount) => total + outputAmount);
+    const outputTotal: number = Object.values(outputMap).reduce(
+      (total: number, outputAmount: number) => total + outputAmount
+    );
 
     if (amount !== outputTotal) {
       console.error(`Invalid transaction from ${address}`);

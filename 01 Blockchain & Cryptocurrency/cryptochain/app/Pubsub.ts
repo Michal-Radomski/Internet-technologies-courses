@@ -4,10 +4,13 @@ dotenv.config();
 
 import Blockchain from "../blockchain/Blockchain";
 import Block from "../blockchain/Block";
+import TransactionPool from "../wallet/TransactionPool";
+import Transaction from "../wallet/Transaction";
 
 const CHANNELS = {
   TEST: "TEST",
   BLOCKCHAIN: "BLOCKCHAIN",
+  TRANSACTION: "TRANSACTION",
 };
 
 const redisConfig = {
@@ -19,8 +22,10 @@ class PubSub {
   blockchain: Blockchain;
   publisher: RedisClientType;
   subscriber: RedisClientType;
-  constructor({ blockchain }: { blockchain: Blockchain }) {
+  transactionPool: TransactionPool;
+  constructor({ blockchain, transactionPool }: { blockchain: Blockchain; transactionPool: TransactionPool }) {
     this.blockchain = blockchain;
+    this.transactionPool = transactionPool;
 
     // Setup the Redis clients for publishing and subscribing
     this.publisher = createClient(redisConfig);
@@ -52,10 +57,20 @@ class PubSub {
   handleMessage(channel: string, message: string): void {
     console.log(`Message received. Channel: ${channel}. Message: ${message}`);
 
-    const parsedMessage = JSON.parse(message) as Block[];
+    const parsedMessage = JSON.parse(message) as Block[] | Transaction;
 
-    if (channel === CHANNELS.BLOCKCHAIN) {
-      this.blockchain.replaceChain(parsedMessage);
+    // if (channel === CHANNELS.BLOCKCHAIN) {
+    //   this.blockchain.replaceChain(parsedMessage);
+    // }
+    switch (channel) {
+      case CHANNELS.BLOCKCHAIN:
+        this.blockchain.replaceChain(parsedMessage as Block[]);
+        break;
+      case CHANNELS.TRANSACTION:
+        this.transactionPool.setTransaction(parsedMessage as Transaction);
+        break;
+      default:
+        return;
     }
   }
 
@@ -84,6 +99,13 @@ class PubSub {
     await this.publish({
       channel: CHANNELS.BLOCKCHAIN,
       message: JSON.stringify(this.blockchain.chain),
+    });
+  }
+
+  broadcastTransaction(transaction: Transaction): void {
+    this.publish({
+      channel: CHANNELS.TRANSACTION,
+      message: JSON.stringify(transaction),
     });
   }
 }

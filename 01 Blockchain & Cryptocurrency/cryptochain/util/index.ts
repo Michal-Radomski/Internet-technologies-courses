@@ -4,6 +4,7 @@ import { DataI } from "../Interfaces";
 import cryptoHash from "./crypto-hash";
 
 export const ec: EC = new EC("secp256k1"); //* Used by Bitcoin
+// console.log("ec:", ec);
 
 const verifySignature = ({
   publicKey,
@@ -15,6 +16,7 @@ const verifySignature = ({
   signature: EC.Signature;
 }): boolean => {
   const keyFromPublic: EC.KeyPair = ec.keyFromPublic(publicKey, "hex");
+  // console.log("JSON.stringify(keyFromPublic):", JSON.stringify(keyFromPublic));
 
   return keyFromPublic.verify(cryptoHash(data), signature);
 };

@@ -15,7 +15,9 @@ describe("Transaction", (): void => {
     recipient = "recipient-public-key";
     amount = 50;
 
+    // console.log({ senderWallet, recipient, amount });
     transaction = new Transaction({ senderWallet, recipient, amount });
+    // console.log("transaction:", transaction);
   });
 
   it("has an `id`", (): void => {
@@ -41,7 +43,9 @@ describe("Transaction", (): void => {
       expect(transaction).toHaveProperty("input");
     });
 
-    it("has a `timestamp` in the input", (): void => {});
+    it("has a `timestamp` in the input", (): void => {
+      expect(transaction.input).toHaveProperty("timestamp");
+    });
 
     it("sets the `amount` to the `senderWallet` balance", (): void => {
       expect(transaction.input.amount).toEqual(senderWallet.balance);
@@ -67,7 +71,6 @@ describe("Transaction", (): void => {
 
     beforeEach((): void => {
       errorMock = jest.fn();
-
       global.console.error = errorMock;
     });
 
@@ -89,7 +92,7 @@ describe("Transaction", (): void => {
 
       describe("and a transaction input Signature is invalid", (): void => {
         it("returns false and logs an error", (): void => {
-          transaction.input.signature = new Wallet().sign("data");
+          transaction.input.signature = new Wallet().sign("data") as EC.Signature;
 
           expect(Transaction.validTransaction(transaction)).toBe(false);
           expect(errorMock).toHaveBeenCalled();
@@ -119,6 +122,7 @@ describe("Transaction", (): void => {
         originalSenderOutput = (transaction.outputMap as ObjectI)[senderWallet.publicKey];
         nextRecipient = "next-recipient";
         nextAmount = 50;
+        // console.log("originalSenderOutput:", originalSenderOutput);
 
         transaction.update({
           senderWallet,
@@ -143,9 +147,10 @@ describe("Transaction", (): void => {
         ).toEqual(transaction.input.amount);
       });
 
-      // Temp
       it("re-signs the transaction", (): void => {
-        expect(transaction.input.signature).toEqual(originalSignature);
+        // console.log("transaction.input.signature:", transaction.input.signature);
+        // console.log("originalSignature:", originalSignature);
+        expect(transaction.input.signature).not.toEqual(originalSignature);
       });
 
       describe("and another update for the same recipient", (): void => {

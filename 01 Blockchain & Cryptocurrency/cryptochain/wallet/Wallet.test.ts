@@ -28,7 +28,7 @@ describe("Wallet", (): void => {
         verifySignature({
           publicKey: wallet.publicKey,
           data,
-          signature: wallet.sign(data),
+          signature: wallet.sign(data), //* Old signature
         })
       ).toBe(true);
     });
@@ -38,7 +38,7 @@ describe("Wallet", (): void => {
         verifySignature({
           publicKey: wallet.publicKey,
           data,
-          signature: new Wallet().sign(data),
+          signature: new Wallet().sign(data), //* New signature
         })
       ).toBe(false);
     });
@@ -46,7 +46,7 @@ describe("Wallet", (): void => {
 
   describe("createTransaction", (): void => {
     describe("and the amount exceeds the balance", (): void => {
-      it("throws an error", () => {
+      it("throws an error", (): void => {
         expect(() => wallet.createTransaction({ amount: 999999, recipient: "foo-recipient" })).toThrow(
           "Amount exceeds balance"
         );
@@ -56,7 +56,7 @@ describe("Wallet", (): void => {
     describe("and the amount is valid", (): void => {
       let transaction: Transaction, amount: number, recipient: string;
 
-      beforeEach(() => {
+      beforeEach((): void => {
         amount = 50;
         recipient = "foo-recipient";
         transaction = wallet.createTransaction({ amount, recipient });

@@ -6,6 +6,8 @@ import { DataI } from "../Interfaces";
 import cryptoHash from "../util/crypto-hash";
 import Transaction from "./Transaction";
 
+// console.log("curve:", curve);
+
 class Wallet {
   balance: number;
   keyPair: EC.KeyPair;
@@ -16,6 +18,7 @@ class Wallet {
     this.publicKey = this.keyPair.getPublic().encode("hex", false);
     // console.log("this.keyPair:", this.keyPair);
     // console.log("this.publicKey:", this.publicKey);
+    // console.log("this.keyPair.getPublic():", this.keyPair.getPublic() as curve.base.BasePoint);
   }
 
   sign(data: DataI): EC.Signature {
