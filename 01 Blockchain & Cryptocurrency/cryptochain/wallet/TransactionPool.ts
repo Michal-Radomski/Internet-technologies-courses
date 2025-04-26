@@ -15,10 +15,11 @@ class TransactionPool {
     this.transactionMap = transactionMap;
   }
 
-  existingTransaction({ inputAddress }: { inputAddress: string }): ObjectI {
-    const transactions = Object.values(this.transactionMap) as ObjectI[];
+  existingTransaction({ inputAddress }: { inputAddress: string }): Transaction {
+    const transactions = Object.values(this.transactionMap) as Transaction[];
+    // console.log("transactions:", transactions);
 
-    return transactions.find((transaction: ObjectI) => transaction.input.address === inputAddress) as ObjectI;
+    return transactions.find((transaction: Transaction) => transaction.input.address === inputAddress) as Transaction;
   }
 }
 

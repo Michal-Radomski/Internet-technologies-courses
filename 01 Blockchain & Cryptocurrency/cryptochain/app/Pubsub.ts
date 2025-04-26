@@ -75,7 +75,7 @@ class PubSub {
   }
 
   subscribeToChannels(): void {
-    Object.values(CHANNELS).forEach(async (channel) => {
+    Object.values(CHANNELS).forEach(async (channel: string) => {
       await this.subscriber.subscribe(channel, (message: string) => {
         console.log(`Received message from ${channel}: ${message}`);
       });

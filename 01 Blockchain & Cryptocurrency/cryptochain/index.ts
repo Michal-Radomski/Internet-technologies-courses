@@ -11,7 +11,7 @@ dotenv.config();
 
 // import Block from "./Block";
 import Blockchain from "./blockchain/Blockchain";
-import { DataI } from "./Interfaces";
+import { DataI, ObjectI } from "./Interfaces";
 import PubSub from "./app/Pubsub";
 import Block from "./blockchain/Block";
 import TransactionPool from "./wallet/TransactionPool";
@@ -67,7 +67,7 @@ app.post("/api/transact", (req: Request, res: Response) => {
     } else {
       transaction = wallet.createTransaction({ recipient, amount }) as Transaction;
     }
-
+    // console.log("transaction:", transaction);
     transactionPool.setTransaction(transaction);
     pubsub.broadcastTransaction(transaction);
     return res.status(200).json({ type: "success", transaction });
@@ -76,7 +76,7 @@ app.post("/api/transact", (req: Request, res: Response) => {
   }
 });
 
-app.get("/api/transaction-pool-map", (req, res) => {
+app.get("/api/transaction-pool-map", (req: Request, res: Response) => {
   console.log("req.ip:", req.ip);
   res.json(transactionPool.transactionMap);
 });
@@ -93,7 +93,7 @@ app.get("/test", (req: Request, res: Response) => {
 
 //* Blockchain - get request
 // Todo: replace with axios
-const syncChains = (): void => {
+const syncChainsWithRootState = (): void => {
   request({ url: `${ROOT_NODE_ADDRESS}/api/blocks` }, (error, response, body) => {
     if (!error && response.statusCode === 200) {
       const rootChain = JSON.parse(body) as Block[];
@@ -105,7 +105,7 @@ const syncChains = (): void => {
 
   request({ url: `${ROOT_NODE_ADDRESS}/api/transaction-pool-map` }, (error, response, body) => {
     if (!error && response.statusCode === 200) {
-      const rootTransactionPoolMap = JSON.parse(body);
+      const rootTransactionPoolMap = JSON.parse(body) as ObjectI;
 
       console.log("Replace transaction pool map on a sync with", rootTransactionPoolMap);
       transactionPool.setMap(rootTransactionPoolMap);
@@ -128,7 +128,7 @@ httpServer.listen({ port: PORT }, () => {
   console.log("Current Time:", new Date().toLocaleTimeString());
 
   if (PORT !== DEFAULT_PORT) {
-    syncChains();
+    syncChainsWithRootState();
   }
 });
 
