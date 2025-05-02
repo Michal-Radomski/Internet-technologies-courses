@@ -8,7 +8,7 @@ class Blocks extends React.Component {
   state = { blocks: [] as BlockI[], paginatedId: 1, blocksLength: 0 };
 
   componentDidMount(): void {
-    fetch(`${document.location.origin}/api/blocks/length`)
+    fetch("http://localhost:3000/api/blocks/length")
       .then((response) => response.json())
       .then((json) => this.setState({ blocksLength: json }));
 
@@ -16,7 +16,7 @@ class Blocks extends React.Component {
   }
 
   fetchPaginatedBlocks = (paginatedId: number) => (): void => {
-    fetch(`${document.location.origin}/api/blocks/${paginatedId}`)
+    fetch(`http://localhost:3000/api/blocks/${paginatedId}`)
       .then((response) => response.json())
       .then((json) => this.setState({ blocks: json }));
   };

@@ -8,8 +8,8 @@
     "avg": "nodemon ./scripts/average-work.ts",
     "test": "jest --watchAll",
     "test:wallet": "jest wallet --watch",
-    "build-watch": "parcel watch ./client/index.html --dist-dir client/dist",
-    "dev": "concurrently --kill-others \"npm run dev-server\" \"npm run build-watch\"",
+    "client": "parcel ./client/index.html --dist-dir client/dist",
+    "dev": "concurrently --kill-others \"npm run dev-server\" \"npm run client\"",
     "build": "parcel build ./client/index.html --dist-dir client/dist"
   },
   "keywords": [],

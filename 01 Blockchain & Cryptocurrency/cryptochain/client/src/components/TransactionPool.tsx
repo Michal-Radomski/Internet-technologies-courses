@@ -1,26 +1,25 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 import Transaction from "./Transaction";
-import history from "../history";
 
 const POLL_INTERVAL_MS = 10000;
 
-class TransactionPool extends React.Component {
+class TransactionPool extends React.Component<{ history: string[] }> {
   state = { transactionPoolMap: {} as ObjectI };
 
   fetchTransactionPoolMap = (): void => {
-    fetch(`${document.location.origin}/api/transaction-pool-map`)
+    fetch("http://localhost:3000/api/transaction-pool-map")
       .then((response) => response.json())
       .then((json) => this.setState({ transactionPoolMap: json }));
   };
 
   fetchMineTransactions = (): void => {
-    fetch(`${document.location.origin}/api/mine-transactions`).then((response) => {
+    fetch("http://localhost:3000/api/mine-transactions").then((response) => {
       if (response.status === 200) {
         alert("success");
-        history.push("/blocks");
+        this.props.history.push("/blocks");
       } else {
         alert("The mine-transactions block request did not complete.");
       }
@@ -62,4 +61,4 @@ class TransactionPool extends React.Component {
   }
 }
 
-export default TransactionPool;
+export default withRouter(TransactionPool as any);

@@ -1,14 +1,12 @@
 import React from "react";
 import { FormGroup, FormControl, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
-import history from "../history";
-
-class ConductTransaction extends React.Component {
+class ConductTransaction extends React.Component<{ history: string[] }> {
   state = { recipient: "", amount: 0, knownAddresses: [] };
 
   componentDidMount(): void {
-    fetch(`${document.location.origin}/api/known-addresses`)
+    fetch("http://localhost:3000/api/known-addresses")
       .then((response) => response.json())
       .then((json) => this.setState({ knownAddresses: json }));
   }
@@ -24,7 +22,7 @@ class ConductTransaction extends React.Component {
   conductTransaction = () => {
     const { recipient, amount } = this.state;
 
-    fetch(`${document.location.origin}/api/transact`, {
+    fetch("http://localhost:3000/api/transact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ recipient, amount }),
@@ -32,7 +30,7 @@ class ConductTransaction extends React.Component {
       .then((response) => response.json())
       .then((json) => {
         alert(json.message || json.type);
-        history.push("/transaction-pool");
+        this.props.history.push("/transaction-pool");
       });
   };
 
@@ -68,4 +66,4 @@ class ConductTransaction extends React.Component {
   }
 }
 
-export default ConductTransaction;
+export default withRouter(ConductTransaction as any);

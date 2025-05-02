@@ -45,7 +45,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "client/dist")));
+// app.use(express.static(path.join(__dirname, "client/dist")));
 
 app.get("/api/blocks", (req: Request, res: Response) => {
   console.log("req.ip:", req.ip);
@@ -116,11 +116,11 @@ app.get("/test", (req: Request, res: Response) => {
   res.send("<h1 style='color:blue;text-align:center'>API is running</h1>");
 });
 
-app.get("/{*splat}", (req: Request, res: Response) => {
-  console.log("req.ip:", req.ip);
-  // console.log("__dirname:", __dirname);
-  res.sendFile(path.join(__dirname, "./client/dist/index.html"));
-});
+// app.get("/{*splat}", (req: Request, res: Response) => {
+//   console.log("req.ip:", req.ip);
+//   // console.log("__dirname:", __dirname);
+//   res.sendFile(path.join(__dirname, "./client/dist/index.html"));
+// });
 
 //* Blockchain - get request
 // Todo: replace with axios

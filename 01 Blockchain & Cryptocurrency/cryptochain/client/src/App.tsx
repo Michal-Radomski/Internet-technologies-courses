@@ -1,3 +1,5 @@
+// Todo: fix the router!
+
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -9,7 +11,7 @@ class App extends React.Component {
   state = { walletInfo: {} as ObjectI };
 
   componentDidMount(): void {
-    fetch(`${document.location.origin}/api/wallet-info`)
+    fetch("http://localhost:3000/api/wallet-info")
       .then((response) => response.json())
       .then((json) => this.setState({ walletInfo: json }));
   }
@@ -19,7 +21,7 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <img className="logo" src={logo}></img>
+        <img className="logo" src={logo} width={"auto"} height={"auto"} />
         <br />
         <div>Welcome to the blockchain...</div>
         <br />
