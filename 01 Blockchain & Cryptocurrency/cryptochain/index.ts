@@ -195,3 +195,47 @@ httpServer.listen({ port: PORT }, () => {
 
 // const id = uuid();
 // console.log("id:", id);
+
+//* Break
+// for (let i = 0; i < 10; i++) {
+//   if (i === 5) {
+//     break;
+//   }
+//   console.log(1, { i }); // Output: 0 1 2 3 4
+// }
+
+// let count = 0;
+// while (count < 10) {
+//   if (count === 5) {
+//     break;
+//   }
+//   console.log(2, { count }); // Output: 0 1 2 3 4
+//   count++;
+// }
+
+// let index = 0;
+// do {
+//   if (index === 3) {
+//     break;
+//   }
+//   console.log(3, { index }); // Output: 0 1 2
+//   index++;
+// } while (index < 5);
+
+// let product = "tablet";
+// let discount = 0;
+
+// switch (product) {
+//   case "phone":
+//     discount = 5;
+//     break;
+//   case "tablet":
+//     discount = 10;
+//     break;
+//   case "laptop":
+//     discount = 15;
+//     break;
+//   default:
+//     discount = 0;
+// }
+// console.log(4, `There is a ${discount}% discount on ${product}.`); // Output: There is a 10% discount on tablet.
