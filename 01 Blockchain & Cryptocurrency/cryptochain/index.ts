@@ -115,6 +115,12 @@ app.get("/test", (req: Request, res: Response) => {
   res.send("<h1 style='color:blue;text-align:center'>API is running</h1>");
 });
 
+app.get("/{*splat}", (req: Request, res: Response) => {
+  console.log("req.ip:", req.ip);
+  // console.log("__dirname:", __dirname);
+  res.sendFile(path.join(__dirname, "/client/index.html"));
+});
+
 //* Blockchain - get request
 // Todo: replace with axios
 const syncChainsWithRootState = (): void => {
