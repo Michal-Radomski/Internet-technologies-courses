@@ -17,11 +17,14 @@ import Block from "./blockchain/Block";
 import TransactionPool from "./wallet/TransactionPool";
 import Wallet from "./wallet/Wallet";
 import Transaction from "./wallet/Transaction";
+import TransactionMiner from "./app/TransactionMiner";
 
 const transactionPool: TransactionPool = new TransactionPool();
 const blockchain: Blockchain = new Blockchain();
 const wallet: Wallet = new Wallet();
 const pubsub: PubSub = new PubSub({ blockchain, transactionPool });
+const transactionMiner: TransactionMiner = new TransactionMiner({ blockchain, transactionPool, wallet, pubsub });
+
 //* Test
 // setTimeout(() => pubsub.broadcastChain(), 1000);
 
@@ -65,7 +68,11 @@ app.post("/api/transact", (req: Request, res: Response) => {
     if (transaction) {
       transaction.update({ senderWallet: wallet, recipient, amount });
     } else {
-      transaction = wallet.createTransaction({ recipient, amount }) as Transaction;
+      transaction = wallet.createTransaction({
+        recipient,
+        amount,
+        chain: blockchain.chain,
+      }) as Transaction;
     }
     // console.log("transaction:", transaction);
     transactionPool.setTransaction(transaction);
@@ -79,6 +86,23 @@ app.post("/api/transact", (req: Request, res: Response) => {
 app.get("/api/transaction-pool-map", (req: Request, res: Response) => {
   console.log("req.ip:", req.ip);
   res.json(transactionPool.transactionMap);
+});
+
+app.get("/api/mine-transactions", (req: Request, res: Response) => {
+  console.log("req.ip:", req.ip);
+  transactionMiner.mineTransactions();
+
+  res.redirect("/api/blocks");
+});
+
+app.get("/api/wallet-info", (req: Request, res: Response) => {
+  console.log("req.ip:", req.ip);
+  const address: string = wallet.publicKey;
+
+  res.json({
+    address,
+    balance: Wallet.calculateBalance({ chain: blockchain.chain, address }),
+  });
 });
 
 //* Favicon
