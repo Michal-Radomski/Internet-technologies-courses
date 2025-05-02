@@ -8,6 +8,7 @@
     "moduleResolution": "node",
     "typeRoots": ["/usr/local/lib/node_modules/@types"], //* Globally installed types in Ubuntu
     "resolveJsonModule": true,
+    "jsx": "react-jsx",
     // "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "strict": true,
@@ -20,6 +21,6 @@
     // "sourceMap": true,
     // "outDir": "dist"
   },
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts", "./**/*.tsx"],
   "exclude": ["node_modules"]
 }
