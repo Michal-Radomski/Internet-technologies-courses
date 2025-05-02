@@ -1,11 +1,10 @@
-// Todo: fix the router!
+// Todo: fix the router + logo img!
 
 import React from "react";
 import { Link } from "react-router-dom";
 
 import logo from "./assets/logo.png";
 import "./App.scss";
-import { ObjectI } from "../../Interfaces";
 
 class App extends React.Component {
   state = { walletInfo: {} as ObjectI };
