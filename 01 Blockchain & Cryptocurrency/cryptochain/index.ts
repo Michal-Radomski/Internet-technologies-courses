@@ -45,6 +45,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, "client")));
 
 app.get("/api/blocks", (req: Request, res: Response) => {
   console.log("req.ip:", req.ip);
@@ -118,7 +119,7 @@ app.get("/test", (req: Request, res: Response) => {
 app.get("/{*splat}", (req: Request, res: Response) => {
   console.log("req.ip:", req.ip);
   // console.log("__dirname:", __dirname);
-  res.sendFile(path.join(__dirname, "/client/index.html"));
+  res.sendFile(path.join(__dirname, "client/index.html"));
 });
 
 //* Blockchain - get request
