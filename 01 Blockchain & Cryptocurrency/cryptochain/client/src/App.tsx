@@ -1,4 +1,4 @@
-// Todo: fix the router + logo img!
+// Todo: fix the logo img!
 
 import React from "react";
 import { Link } from "react-router-dom";

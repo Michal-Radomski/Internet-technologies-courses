@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Button } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 
 class ConductTransaction extends React.Component<{ history: string[] }> {
-  state = { recipient: "", amount: 0, knownAddresses: [] };
+  state = { recipient: "", amount: 0, knownAddresses: [] as string[] };
 
   componentDidMount(): void {
     fetch("http://localhost:3000/api/known-addresses")
@@ -19,7 +19,7 @@ class ConductTransaction extends React.Component<{ history: string[] }> {
     this.setState({ amount: Number(event.target.value) });
   };
 
-  conductTransaction = () => {
+  conductTransaction = (): void => {
     const { recipient, amount } = this.state;
 
     fetch("http://localhost:3000/api/transact", {
@@ -41,7 +41,7 @@ class ConductTransaction extends React.Component<{ history: string[] }> {
         <h3>Conduct a Transaction</h3>
         <br />
         <h4>Known Addresses</h4>
-        {this.state.knownAddresses.map((knownAddress) => {
+        {this.state.knownAddresses.map((knownAddress: string) => {
           return (
             <div key={knownAddress}>
               <div>{knownAddress}</div>

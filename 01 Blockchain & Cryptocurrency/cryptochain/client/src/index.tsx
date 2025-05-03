@@ -8,14 +8,15 @@ import ConductTransaction from "./components/ConductTransaction";
 import TransactionPool from "./components/TransactionPool";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLDivElement).render(
-  <React.StrictMode>
-    <Router>
-      <Switch>
-        <Route exact path="/" component={App} />
-        <Route path="/blocks" component={Blocks} />
-        <Route path="/conduct-transaction" component={ConductTransaction} />
-        <Route path="/transaction-pool" component={TransactionPool} />
-      </Switch>
-    </Router>
-  </React.StrictMode>
+  //* The router doesn't work in strict mode!
+  // <React.StrictMode>
+  <Router>
+    <Switch>
+      <Route exact path="/" component={App} />
+      <Route path="/blocks" component={Blocks} />
+      <Route path="/conduct-transaction" component={ConductTransaction} />
+      <Route path="/transaction-pool" component={TransactionPool} />
+    </Switch>
+  </Router>
+  // </React.StrictMode>
 );

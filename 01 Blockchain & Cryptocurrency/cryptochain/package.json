@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev-server": "nodemon index.ts",
+    "dev-server": "NODE_ENV=development nodemon index.ts",
     "dev-peer": "cross-env GENERATE_PEER_PORT='true' nodemon index.ts",
     "avg": "nodemon ./scripts/average-work.ts",
     "test": "jest --watchAll",

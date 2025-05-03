@@ -13,7 +13,7 @@ class Block extends React.Component<{ block: BlockI }> {
   get displayTransaction(): React.JSX.Element {
     const { data } = this.props.block;
 
-    const stringifiedData = JSON.stringify(data);
+    const stringifiedData: string = JSON.stringify(data);
 
     const dataDisplay = stringifiedData.length > 35 ? `${stringifiedData.substring(0, 35)}...` : stringifiedData;
 

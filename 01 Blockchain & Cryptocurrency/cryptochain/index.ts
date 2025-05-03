@@ -52,6 +52,26 @@ app.get("/api/blocks", (req: Request, res: Response) => {
   res.json(blockchain.chain);
 });
 
+app.get("/api/blocks/length", (req: Request, res: Response) => {
+  console.log("req.ip:", req.ip);
+  res.json(blockchain.chain.length);
+});
+
+app.get("/api/blocks/:id", (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { length } = blockchain.chain;
+
+  const blocksReversed: Block[] = blockchain.chain.slice().reverse();
+
+  let startIndex: number = (Number(id) - 1) * 5;
+  let endIndex: number = Number(id) * 5;
+
+  startIndex = startIndex < length ? startIndex : length;
+  endIndex = endIndex < length ? endIndex : length;
+
+  res.json(blocksReversed.slice(startIndex, endIndex));
+});
+
 app.post("/api/mine", (req: Request, res: Response) => {
   const { data } = req.body as { data: DataI };
   blockchain.addBlock({ data });
@@ -106,6 +126,21 @@ app.get("/api/wallet-info", (req: Request, res: Response) => {
   });
 });
 
+app.get("/api/known-addresses", (req: Request, res: Response) => {
+  console.log("req.ip:", req.ip);
+  const addressMap = {} as ObjectI;
+
+  for (let block of blockchain.chain) {
+    for (let transaction of block.data) {
+      const recipient = Object.keys((transaction as unknown as ObjectI).outputMap);
+
+      recipient.forEach((recipient) => (addressMap[recipient] = recipient));
+    }
+  }
+
+  res.json(Object.keys(addressMap));
+});
+
 //* Favicon
 app.get("/favicon.ico", (_req: Request, res: Response) => {
   res.sendFile(path.join(__dirname + "/favicon.svg"));
@@ -143,6 +178,66 @@ const syncChainsWithRootState = (): void => {
     }
   });
 };
+
+if (process.env.NODE_ENV === "development") {
+  //* Test Data
+  const walletFoo = new Wallet();
+  const walletBar = new Wallet();
+
+  const generateWalletTransaction = ({
+    wallet,
+    recipient,
+    amount,
+  }: {
+    wallet: Wallet;
+    recipient: string;
+    amount: number;
+  }) => {
+    const transaction: Transaction = wallet.createTransaction({
+      recipient,
+      amount,
+      chain: blockchain.chain,
+    });
+
+    transactionPool.setTransaction(transaction);
+  };
+
+  const walletAction = (): void =>
+    generateWalletTransaction({
+      wallet,
+      recipient: walletFoo.publicKey,
+      amount: 5,
+    });
+
+  const walletFooAction = (): void =>
+    generateWalletTransaction({
+      wallet: walletFoo,
+      recipient: walletBar.publicKey,
+      amount: 10,
+    });
+
+  const walletBarAction = (): void =>
+    generateWalletTransaction({
+      wallet: walletBar,
+      recipient: wallet.publicKey,
+      amount: 15,
+    });
+
+  for (let i = 0; i < 10; i++) {
+    if (i % 3 === 0) {
+      walletAction();
+      walletFooAction();
+    } else if (i % 3 === 1) {
+      walletAction();
+      walletBarAction();
+    } else {
+      walletFooAction();
+      walletBarAction();
+    }
+
+    transactionMiner.mineTransactions();
+  }
+}
 
 let PEER_PORT;
 
