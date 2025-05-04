@@ -4,7 +4,9 @@
   "description": "server-side",
   "main": "server.ts",
   "scripts": {
-    "server": "NODE_ENV=development nodemon server.ts"
+    "server": "NODE_ENV=development nodemon server.ts",
+    "client": "npm run dev --prefix ../client/",
+    "dev": "clear && concurrently \"npm run server\"  \"npm run client\""
   },
   "keywords": [],
   "author": "Michal Radomski <michalra@op.pl>",
