@@ -1,8 +1,10 @@
+import { Action } from "../Interfaces";
+
 const initState = {
   identity: "",
 };
 
-const reducer = (state = initState, action: { type: any }) => {
+const reducer = (state = initState, action: Action) => {
   switch (action.type) {
     case "DUMMY_ACTION":
       return {
