@@ -12,6 +12,7 @@ import compression from "compression";
 import twilio from "twilio";
 import { v4 as uuidv4 } from "uuid";
 import { DefaultEventsMap, Server } from "socket.io";
+import { ConnectedUser, Room } from "./Interfaces";
 
 console.log("twilio:", twilio);
 console.log("uuidv4():", uuidv4());
@@ -60,8 +61,29 @@ app.get("/", (req: Request, res: Response) => {
   res.send("<h1 style='color:blue;text-align:center'>API is running</h1>");
 });
 
-//* Port
+const connectedUsers = [] as ConnectedUser[]; // Temp
+const rooms = [] as Room[];
 
+// Create route to check if room exists
+// @ts-ignore
+app.get("/api/room-exists/:roomId", (req: Request, res: Response) => {
+  const { roomId } = req.params as { roomId: string };
+  const room = rooms.find((room) => room.id === roomId) as Room;
+
+  if (room) {
+    // Send response that room exists
+    if (room.connectedUsers.length > 3) {
+      return res.send({ roomExists: true, full: true });
+    } else {
+      return res.send({ roomExists: true, full: false });
+    }
+  } else {
+    // Send response that room does not exists
+    return res.send({ roomExists: false });
+  }
+});
+
+//* Port
 const portHTTP = (process.env.HTTP_PORT || 5000) as number;
 const httpServer = http.createServer(app);
 

@@ -27,7 +27,7 @@ const JoinRoomContent = (props: Props) => {
 
   const history = useHistory();
 
-  const handleJoinRoom = async () => {
+  const handleJoinRoom = async (): Promise<void> => {
     setIdentityAction!(nameValue);
     if (isRoomHost) {
       createRoom();
@@ -45,7 +45,7 @@ const JoinRoomContent = (props: Props) => {
       if (full) {
         setErrorMessage("Meeting is full. Please try again later.");
       } else {
-        // join a room !
+        // Join a room !
         setRoomIdAction!(roomIdValue);
         history.push("/room");
       }

@@ -17,7 +17,7 @@ const OnlyWithAudioCheckbox = ({
     <React.Fragment>
       <div className="checkbox_container">
         <div className="checkbox_connection" onClick={handleConnectionTypeChange}>
-          {connectOnlyWithAudio ? <img className="checkbox_image" src={CheckImg}></img> : null}
+          {connectOnlyWithAudio ? <img className="checkbox_image" src={CheckImg} /> : null}
         </div>
         <p className="checkbox_container_paragraph">Only audio</p>
       </div>
