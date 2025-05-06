@@ -85,10 +85,10 @@
 .checkbox_connection {
   width: 25px;
   height: 25px;
-  background: #2d8cff;
+  background-color: #2d8cff;
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 8px;
-  backdrop-filter: blur(80px);
+  // backdrop-filter: blur(80px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -101,6 +101,8 @@
 }
 
 .checkbox_image {
+  width: auto;
+  height: auto;
   max-width: 100%;
   max-height: 100%;
 }

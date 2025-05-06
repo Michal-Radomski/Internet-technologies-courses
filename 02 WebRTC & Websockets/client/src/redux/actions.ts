@@ -41,12 +41,12 @@ export const setRoomId = (roomId: string) => {
   };
 };
 
-// export const setShowOverlay = (showOverlay: any) => {
-//   return {
-//     type: Actions.SET_SHOW_OVERLAY,
-//     showOverlay,
-//   };
-// };
+export const setShowOverlay = (showOverlay: boolean) => {
+  return {
+    type: Actions.SET_SHOW_OVERLAY,
+    showOverlay,
+  };
+};
 
 // export const setParticipants = (participants: any) => {
 //   return {

@@ -6,7 +6,7 @@ import ParticipantsSection from "./ParticipantsSection/ParticipantsSection";
 import VideoSection from "./VideoSection/VideoSection";
 import RoomLabel from "./RoomLabel";
 import Overlay from "./Overlay";
-// import * as webRTCHandler from "../utils/webRTCHandler";
+import * as webRTCHandler from "../utils/webRTCHandler";
 import "./RoomPage.scss";
 import { RootState } from "../Interfaces";
 
@@ -26,9 +26,14 @@ const RoomPage = ({ roomId, identity, isRoomHost, showOverlay, connectOnlyWithAu
       const siteUrl = window.location.origin;
       window.location.href = siteUrl;
     } else {
-      // webRTCHandler.getLocalPreviewAndInitRoomConnection(isRoomHost, identity, roomId, connectOnlyWithAudio);
+      webRTCHandler.getLocalPreviewAndInitRoomConnection(
+        isRoomHost as boolean,
+        identity as string,
+        roomId as string,
+        connectOnlyWithAudio as boolean
+      );
     }
-  }, [isRoomHost, roomId]);
+  }, [connectOnlyWithAudio, identity, isRoomHost, roomId]);
 
   return (
     <div className="room_container">
