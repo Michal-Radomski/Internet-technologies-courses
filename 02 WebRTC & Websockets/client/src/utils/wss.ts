@@ -1,8 +1,8 @@
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { io, Socket } from "socket.io-client";
 
-// import { setRoomId, setParticipants, setSocketId } from "../redux/actions";
-// import store from "../redux/store";
+import { setSocketId } from "../redux/actions";
+import { store } from "../redux/store";
 // import * as webRTCHandler from "./webRTCHandler";
 // import { appendNewMessageToChatHistory } from "./directMessages";
 
@@ -10,14 +10,14 @@ const SERVER = "http://localhost:5000";
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap> | null = null;
 
-export const connectWithSocketIOServer = () => {
+export const connectWithSocketIOServer = (): void => {
   socket = io(SERVER) as Socket<DefaultEventsMap, DefaultEventsMap>;
 
-  //   socket.on("connect", () => {
-  //     console.log("successfully connected with socket io server");
-  //     console.log(socket.id);
-  //     store.dispatch(setSocketId(socket.id));
-  //   });
+  socket.on("connect", (): void => {
+    console.log("successfully connected with socket io server");
+    console.log(socket?.id);
+    store.dispatch(setSocketId(socket?.id as string));
+  });
 
   //   socket.on("room-id", (data) => {
   //     const { roomId } = data;
@@ -56,7 +56,7 @@ export const connectWithSocketIOServer = () => {
   //   });
 };
 
-export const createNewRoom = (identity: string, onlyAudio: boolean) => {
+export const createNewRoom = (identity: string, onlyAudio: boolean): void => {
   // Emit an event to server that we would like to create new room
   const data = {
     identity,
@@ -66,7 +66,7 @@ export const createNewRoom = (identity: string, onlyAudio: boolean) => {
   socket?.emit("create-new-room", data);
 };
 
-export const joinRoom = (identity: string, roomId: string | null, onlyAudio: boolean) => {
+export const joinRoom = (identity: string, roomId: string | null, onlyAudio: boolean): void => {
   // Emit an event to server that we would to join a room
   const data = {
     roomId,

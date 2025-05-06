@@ -76,9 +76,9 @@ export const setActiveConversation = (activeConversation: boolean) => {
 //   };
 // };
 
-// export const setSocketId = (socketId: string) => {
-//   return {
-//     type: Actions.SET_SOCKET_ID,
-//     socketId,
-//   };
-// };
+export const setSocketId = (socketId: string) => {
+  return {
+    type: Actions.SET_SOCKET_ID,
+    socketId,
+  };
+};

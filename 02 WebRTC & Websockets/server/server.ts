@@ -9,16 +9,12 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
-import twilio from "twilio";
+// import twilio from "twilio";
 import { v4 as uuidv4 } from "uuid";
-import { DefaultEventsMap, Server } from "socket.io";
+import { DefaultEventsMap, Server, Socket } from "socket.io";
 import { ConnectedUser, Room } from "./Interfaces";
-
-console.log("twilio:", twilio);
-console.log("uuidv4():", uuidv4());
-
-//* Import routes
-// import indexRouter from "./indexRouter"; // Temp
+// console.log("twilio:", twilio);
+// console.log("uuidv4():", uuidv4());
 
 //* The server
 const app: Express = express();
@@ -48,9 +44,6 @@ app.use(
 // Compress all responses
 app.use(compression({ level: 6 }));
 
-//* Route middleware
-// app.use("/api", indexRouter); // Temp
-
 //* Favicon
 app.get("/favicon.ico", (_req: Request, res: Response) => {
   res.sendFile(path.join(__dirname + "/favicon.svg"));
@@ -61,8 +54,8 @@ app.get("/", (req: Request, res: Response) => {
   res.send("<h1 style='color:blue;text-align:center'>API is running</h1>");
 });
 
-const connectedUsers = [] as ConnectedUser[]; // Temp
-const rooms = [] as Room[];
+let connectedUsers = [] as ConnectedUser[];
+let rooms = [] as Room[];
 
 // Create route to check if room exists
 // @ts-ignore
@@ -93,7 +86,41 @@ const io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> = ne
     methods: ["GET", "POST"],
   },
 });
-console.log("io:", io);
+// console.log("io:", io);
+
+io.on("connection", (socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>) => {
+  // console.log("socket:", socket);
+  console.log(`User connected ${socket.id}`);
+
+  socket.on("create-new-room", (data) => {
+    // console.log("data:", data);
+    createNewRoomHandler(data, socket);
+  });
+
+  socket.on("join-room", (data) => {
+    console.log("data:", data);
+    // joinRoomHandler(data, socket);
+  });
+
+  socket.on("disconnect", () => {
+    // disconnectHandler(socket);
+  });
+
+  socket.on("conn-signal", (data) => {
+    console.log("data:", data);
+    // signalingHandler(data, socket);
+  });
+
+  socket.on("conn-init", (data) => {
+    console.log("data:", data);
+    // initializeConnectionHandler(data, socket);
+  });
+
+  socket.on("direct-message", (data) => {
+    console.log("data:", data);
+    // directMessageHandler(data, socket);
+  });
+});
 
 httpServer.listen({ port: portHTTP }, () => {
   console.log(`🚀 Server is listening at http://localhost:${portHTTP}`);
@@ -101,3 +128,43 @@ httpServer.listen({ port: portHTTP }, () => {
   console.log("Current Time:", new Date().toLocaleTimeString());
   // console.log('process.env.NODE_ENV === "development":', process.env.NODE_ENV === "development");
 });
+
+//* Socket.io handlers
+const createNewRoomHandler = (
+  data: ConnectedUser,
+  socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
+): void => {
+  console.log("host is creating new room");
+  console.log("data:", data);
+  const { identity, onlyAudio } = data;
+
+  const roomId: string = uuidv4();
+
+  // Create new user
+  const newUser = {
+    identity,
+    id: uuidv4(),
+    socketId: socket.id,
+    roomId,
+    onlyAudio,
+  } as ConnectedUser;
+
+  // Push that user to connectedUsers
+  connectedUsers = [...connectedUsers, newUser];
+
+  // Create new room
+  const newRoom = {
+    id: roomId,
+    connectedUsers: [newUser],
+  };
+  // Join socket.io room
+  socket.join(roomId);
+
+  rooms = [...rooms, newRoom];
+
+  // Emit to that client which created that room roomId
+  socket.emit("room-id", { roomId });
+
+  // Emit an event to all users connected to that room about new users which are right in this room
+  socket.emit("room-update", { connectedUsers: newRoom.connectedUsers });
+};

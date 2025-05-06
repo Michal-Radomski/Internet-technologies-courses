@@ -5,8 +5,13 @@ import "./App.scss";
 import IntroductionPage from "./IntroductionPage/IntroductionPage";
 import JoinRoomPage from "./JoinRoomPage/JoinRoomPage";
 import RoomPage from "./RoomPage/RoomPage";
+import { connectWithSocketIOServer } from "./utils/wss";
 
 const App = (): JSX.Element => {
+  React.useEffect(() => {
+    connectWithSocketIOServer();
+  }, []);
+
   return (
     <React.Fragment>
       <Router>

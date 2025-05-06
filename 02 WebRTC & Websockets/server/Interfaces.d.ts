@@ -1,10 +1,12 @@
 export interface ConnectedUser {
-  name: string;
+  identity: string;
   id: string;
+  socketId: string;
+  roomId: string;
+  onlyAudio: boolean;
 }
 
 export interface Room {
   connectedUsers: ConnectedUser[];
-  name: string;
   id: string;
 }
