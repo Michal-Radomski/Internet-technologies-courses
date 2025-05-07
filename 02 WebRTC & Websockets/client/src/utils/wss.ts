@@ -5,6 +5,7 @@ import { setParticipants, setRoomId, setSocketId } from "../redux/actions";
 import { store } from "../redux/store";
 import { Participant } from "../Interfaces";
 import * as webRTCHandler from "./webRTCHandler";
+import { SignalData } from "simple-peer";
 // import { appendNewMessageToChatHistory } from "./directMessages";
 
 const SERVER = "http://localhost:5000";
@@ -78,10 +79,10 @@ export const joinRoom = (identity: string, roomId: string | null, onlyAudio: boo
   socket?.emit("join-room", data);
 };
 
-// export const signalPeerData = (data) => {
-//   socket.emit("conn-signal", data);
-// };
+export const signalPeerData = (data: { signal: SignalData; connUserSocketId: string }): void => {
+  socket?.emit("conn-signal", data);
+};
 
 // export const sendDirectMessage = (data) => {
-//   socket.emit("direct-message", data);
+//   socket?.emit("direct-message", data);
 // };

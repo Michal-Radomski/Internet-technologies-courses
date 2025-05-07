@@ -10,6 +10,7 @@ export type Action = typeof store.action;
 export type ObjectI = { [key: string]: any };
 
 export interface Participant {
+  onlyAudio: boolean;
   identity: string;
   socketId: string;
 }

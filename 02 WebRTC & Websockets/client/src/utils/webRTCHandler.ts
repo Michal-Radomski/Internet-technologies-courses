@@ -1,6 +1,9 @@
+import Peer from "simple-peer";
+
 import { setShowOverlay } from "../redux/actions";
 import { store } from "../redux/store";
 import * as wss from "./wss";
+import { Participant } from "../Interfaces";
 
 const defaultConstraints = {
   audio: true,
@@ -35,9 +38,9 @@ export const getLocalPreviewAndInitRoomConnection = async (
       localStream = stream;
       console.log("localStream:", localStream);
 
-      // showLocalVideoPreview(localStream);
+      showLocalVideoPreview(localStream);
 
-      // dispatch an action to hide overlay
+      // Dispatch an action to hide overlay
       store.dispatch(setShowOverlay(false));
 
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -49,56 +52,60 @@ export const getLocalPreviewAndInitRoomConnection = async (
     });
 };
 
-// let peers = {};
-// let streams = [];
+const peers = {} as { connUserSocketId: Peer.Instance };
+let streams = [] as MediaStream[];
 
-// const getConfiguration = () => {
-//   const turnIceServers = getTurnIceServers();
+const getConfiguration = () => {
+  // const turnIceServers = getTurnIceServers();
+  const turnIceServers = false;
 
-//   if (turnIceServers) {
-//     return {
-//       iceServers: [
-//         {
-//           urls: "stun:stun.l.google.com:19302",
-//         },
-//         ...turnIceServers,
-//       ],
-//     };
-//   } else {
-//     console.warn("Using only STUN server");
-//     return {
-//       iceServers: [
-//         {
-//           urls: "stun:stun.l.google.com:19302",
-//         },
-//       ],
-//     };
-//   }
-// };
+  if (turnIceServers) {
+    return {
+      iceServers: [
+        {
+          urls: "stun:stun.l.google.com:19302",
+        },
+        ...turnIceServers,
+      ],
+    };
+  } else {
+    console.warn("Using only STUN server");
+    return {
+      iceServers: [
+        {
+          urls: "stun:stun.l.google.com:19302",
+        },
+      ],
+    };
+  }
+};
 
-// const messengerChannel = "messenger";
+const messengerChannel: string = "messenger";
 
-export const prepareNewPeerConnection = (connUserSocketId: string, isInitiator: boolean) => {
-  // const configuration = getConfiguration();
-  // peers[connUserSocketId] = new Peer({
-  //   initiator: isInitiator,
-  //   config: configuration,
-  //   stream: localStream,
-  //   channelName: messengerChannel,
-  // });
-  // peers[connUserSocketId].on("signal", (data) => {
-  //   // webRTC offer, webRTC Answer (SDP information), ice candidates
-  //   const signalData = {
-  //     signal: data,
-  //     connUserSocketId: connUserSocketId,
-  //   };
-  //   wss.signalPeerData(signalData);
-  // });
-  // peers[connUserSocketId].on("stream", (stream) => {
-  //   console.log("new stream came");
-  //   addStream(stream, connUserSocketId);
-  //   streams = [...streams, stream];
-  // });
+export const prepareNewPeerConnection = (connUserSocketId: string, isInitiator: boolean): void => {
+  const configuration = getConfiguration();
+  peers[connUserSocketId as keyof typeof peers] = new Peer({
+    initiator: isInitiator,
+    config: configuration,
+    stream: localStream as MediaStream,
+    channelName: messengerChannel,
+  });
+
+  peers[connUserSocketId as keyof typeof peers].on("signal", (data) => {
+    // WebRTC offer, webRTC Answer (SDP information), ice candidates
+    const signalData = {
+      signal: data,
+      connUserSocketId: connUserSocketId,
+    };
+    wss.signalPeerData(signalData);
+  });
+
+  peers[connUserSocketId as keyof typeof peers].on("stream", (stream: MediaStream): void => {
+    console.log("new stream came");
+    addStream(stream, connUserSocketId);
+    streams = [...streams, stream];
+  });
+
   // peers[connUserSocketId].on("data", (data) => {
   //   const messageData = JSON.parse(data);
   //   appendNewMessage(messageData);
@@ -156,45 +163,45 @@ const showLocalVideoPreview = (stream: MediaStream): void => {
   videosContainer.appendChild(videoContainer);
 };
 
-// const addStream = (stream, connUserSocketId) => {
-//   //display incoming stream
-//   const videosContainer = document.getElementById("videos_portal");
-//   const videoContainer = document.createElement("div");
-//   videoContainer.id = connUserSocketId;
+const addStream = (stream: MediaProvider, connUserSocketId: string): void => {
+  // Display incoming stream
+  const videosContainer = document.getElementById("videos_portal") as HTMLDivElement;
+  const videoContainer = document.createElement("div");
+  videoContainer.id = connUserSocketId;
 
-//   videoContainer.classList.add("video_track_container");
-//   const videoElement = document.createElement("video");
-//   videoElement.autoplay = true;
-//   videoElement.srcObject = stream;
-//   videoElement.id = `${connUserSocketId}-video`;
+  videoContainer.classList.add("video_track_container");
+  const videoElement = document.createElement("video");
+  videoElement.autoplay = true;
+  videoElement.srcObject = stream;
+  videoElement.id = `${connUserSocketId}-video`;
 
-//   videoElement.onloadedmetadata = () => {
-//     videoElement.play();
-//   };
+  videoElement.onloadedmetadata = (): void => {
+    videoElement.play();
+  };
 
-//   videoElement.addEventListener("click", () => {
-//     if (videoElement.classList.contains("full_screen")) {
-//       videoElement.classList.remove("full_screen");
-//     } else {
-//       videoElement.classList.add("full_screen");
-//     }
-//   });
+  videoElement.addEventListener("click", () => {
+    if (videoElement.classList.contains("full_screen")) {
+      videoElement.classList.remove("full_screen");
+    } else {
+      videoElement.classList.add("full_screen");
+    }
+  });
 
-//   videoContainer.appendChild(videoElement);
+  videoContainer.appendChild(videoElement);
 
-//   // check if other user connected only with audio
-//   const participants = store.getState().participants;
+  // Check if other user connected only with audio
+  const participants = store.getState().participants as Participant[];
 
-//   const participant = participants.find((p) => p.socketId === connUserSocketId);
-//   console.log(participant);
-//   if (participant?.onlyAudio) {
-//     videoContainer.appendChild(getAudioOnlyLabel(participant.identity));
-//   } else {
-//     videoContainer.style.position = "static";
-//   }
+  const participant = participants.find((p: Participant) => p.socketId === connUserSocketId) as Participant;
+  console.log(participant);
+  if (participant?.onlyAudio) {
+    videoContainer.appendChild(getAudioOnlyLabel(participant.identity));
+  } else {
+    videoContainer.style.position = "static";
+  }
 
-//   videosContainer.appendChild(videoContainer);
-// };
+  videosContainer.appendChild(videoContainer);
+};
 
 const getAudioOnlyLabel = (identity = ""): HTMLDivElement => {
   const labelContainer: HTMLDivElement = document.createElement("div");
