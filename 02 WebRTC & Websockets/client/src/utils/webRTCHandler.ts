@@ -35,7 +35,7 @@ export const getLocalPreviewAndInitRoomConnection = async (
       localStream = stream;
       console.log("localStream:", localStream);
 
-      showLocalVideoPreview(localStream);
+      // showLocalVideoPreview(localStream);
 
       // dispatch an action to hide overlay
       store.dispatch(setShowOverlay(false));

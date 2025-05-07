@@ -1,8 +1,9 @@
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import { io, Socket } from "socket.io-client";
 
-import { setSocketId } from "../redux/actions";
+import { setParticipants, setRoomId, setSocketId } from "../redux/actions";
 import { store } from "../redux/store";
+import { Participant } from "../Interfaces";
 // import * as webRTCHandler from "./webRTCHandler";
 // import { appendNewMessageToChatHistory } from "./directMessages";
 
@@ -19,15 +20,15 @@ export const connectWithSocketIOServer = (): void => {
     store.dispatch(setSocketId(socket?.id as string));
   });
 
-  //   socket.on("room-id", (data) => {
-  //     const { roomId } = data;
-  //     store.dispatch(setRoomId(roomId));
-  //   });
+  socket.on("room-id", (data) => {
+    const { roomId }: { roomId: string } = data;
+    store.dispatch(setRoomId(roomId));
+  });
 
-  //   socket.on("room-update", (data) => {
-  //     const { connectedUsers } = data;
-  //     store.dispatch(setParticipants(connectedUsers));
-  //   });
+  socket.on("room-update", (data) => {
+    const { connectedUsers }: { connectedUsers: Participant[] } = data;
+    store.dispatch(setParticipants(connectedUsers));
+  });
 
   //   socket.on("conn-prepare", (data) => {
   //     const { connUserSocketId } = data;

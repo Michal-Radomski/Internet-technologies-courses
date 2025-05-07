@@ -1,3 +1,5 @@
+import { Participant } from "../Interfaces";
+
 const Actions = {
   SET_IS_ROOM_HOST: "SET_IS_ROOM_HOST",
   SET_CONNECT_ONLY_WITH_AUDIO: "SET_CONNECT_ONLY_WITH_AUDIO",
@@ -48,12 +50,12 @@ export const setShowOverlay = (showOverlay: boolean) => {
   };
 };
 
-// export const setParticipants = (participants: any) => {
-//   return {
-//     type: Actions.SET_PARTICIPANTS,
-//     participants,
-//   };
-// };
+export const setParticipants = (participants: Participant[]) => {
+  return {
+    type: Actions.SET_PARTICIPANTS,
+    participants,
+  };
+};
 
 // export const setMessages = (messages: any) => {
 //   return {

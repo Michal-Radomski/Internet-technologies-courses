@@ -33,7 +33,8 @@ const RoomPage = ({ roomId, identity, isRoomHost, showOverlay, connectOnlyWithAu
         connectOnlyWithAudio as boolean
       );
     }
-  }, [connectOnlyWithAudio, identity, isRoomHost, roomId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="room_container">

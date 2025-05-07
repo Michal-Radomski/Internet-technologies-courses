@@ -6,9 +6,10 @@ import App from "./App.tsx";
 import { store } from "./redux/store.ts";
 
 createRoot(document.getElementById("root") as HTMLDivElement).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>
+  //* Doubles users!
+  // <React.StrictMode>
+  <Provider store={store}>
+    <App />
+  </Provider>
+  // </React.StrictMode>
 );

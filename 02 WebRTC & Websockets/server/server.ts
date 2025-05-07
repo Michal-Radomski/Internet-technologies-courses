@@ -99,7 +99,7 @@ io.on("connection", (socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultE
 
   socket.on("join-room", (data) => {
     console.log("data:", data);
-    // joinRoomHandler(data, socket);
+    joinRoomHandler(data, socket);
   });
 
   socket.on("disconnect", () => {
@@ -167,4 +167,42 @@ const createNewRoomHandler = (
 
   // Emit an event to all users connected to that room about new users which are right in this room
   socket.emit("room-update", { connectedUsers: newRoom.connectedUsers });
+};
+
+const joinRoomHandler = (
+  data: ConnectedUser,
+  socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
+): void => {
+  const { identity, roomId, onlyAudio } = data;
+
+  const newUser = {
+    identity,
+    id: uuidv4(),
+    socketId: socket.id,
+    roomId,
+    onlyAudio,
+  };
+
+  // Join room as user which just is trying to join room passing room id
+  const room = rooms.find((room) => room.id === roomId) as Room;
+  room.connectedUsers = [...room.connectedUsers, newUser];
+
+  // Join socket.io room
+  socket.join(roomId);
+
+  // add new user to connected users array
+  connectedUsers = [...connectedUsers, newUser];
+
+  // emit to all users which are already in this room to prepare peer connection
+  room.connectedUsers.forEach((user: ConnectedUser) => {
+    if (user.socketId !== socket.id) {
+      const data = {
+        connUserSocketId: socket.id,
+      };
+
+      io.to(user.socketId).emit("conn-prepare", data);
+    }
+  });
+
+  io.to(roomId).emit("room-update", { connectedUsers: room.connectedUsers });
 };
