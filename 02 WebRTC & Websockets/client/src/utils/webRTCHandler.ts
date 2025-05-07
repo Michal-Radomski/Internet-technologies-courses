@@ -78,39 +78,32 @@ export const getLocalPreviewAndInitRoomConnection = async (
 
 // const messengerChannel = "messenger";
 
-// export const prepareNewPeerConnection = (connUserSocketId, isInitiator) => {
-//   const configuration = getConfiguration();
-
-//   peers[connUserSocketId] = new Peer({
-//     initiator: isInitiator,
-//     config: configuration,
-//     stream: localStream,
-//     channelName: messengerChannel,
-//   });
-
-//   peers[connUserSocketId].on("signal", (data) => {
-//     // webRTC offer, webRTC Answer (SDP information), ice candidates
-
-//     const signalData = {
-//       signal: data,
-//       connUserSocketId: connUserSocketId,
-//     };
-
-//     wss.signalPeerData(signalData);
-//   });
-
-//   peers[connUserSocketId].on("stream", (stream) => {
-//     console.log("new stream came");
-
-//     addStream(stream, connUserSocketId);
-//     streams = [...streams, stream];
-//   });
-
-//   peers[connUserSocketId].on("data", (data) => {
-//     const messageData = JSON.parse(data);
-//     appendNewMessage(messageData);
-//   });
-// };
+export const prepareNewPeerConnection = (connUserSocketId: string, isInitiator: boolean) => {
+  // const configuration = getConfiguration();
+  // peers[connUserSocketId] = new Peer({
+  //   initiator: isInitiator,
+  //   config: configuration,
+  //   stream: localStream,
+  //   channelName: messengerChannel,
+  // });
+  // peers[connUserSocketId].on("signal", (data) => {
+  //   // webRTC offer, webRTC Answer (SDP information), ice candidates
+  //   const signalData = {
+  //     signal: data,
+  //     connUserSocketId: connUserSocketId,
+  //   };
+  //   wss.signalPeerData(signalData);
+  // });
+  // peers[connUserSocketId].on("stream", (stream) => {
+  //   console.log("new stream came");
+  //   addStream(stream, connUserSocketId);
+  //   streams = [...streams, stream];
+  // });
+  // peers[connUserSocketId].on("data", (data) => {
+  //   const messageData = JSON.parse(data);
+  //   appendNewMessage(messageData);
+  // });
+};
 
 // export const handleSignalingData = (data) => {
 //   //add signaling data to peer connection

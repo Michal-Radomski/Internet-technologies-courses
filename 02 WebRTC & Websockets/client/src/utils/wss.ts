@@ -4,7 +4,7 @@ import { io, Socket } from "socket.io-client";
 import { setParticipants, setRoomId, setSocketId } from "../redux/actions";
 import { store } from "../redux/store";
 import { Participant } from "../Interfaces";
-// import * as webRTCHandler from "./webRTCHandler";
+import * as webRTCHandler from "./webRTCHandler";
 // import { appendNewMessageToChatHistory } from "./directMessages";
 
 const SERVER = "http://localhost:5000";
@@ -30,14 +30,14 @@ export const connectWithSocketIOServer = (): void => {
     store.dispatch(setParticipants(connectedUsers));
   });
 
-  //   socket.on("conn-prepare", (data) => {
-  //     const { connUserSocketId } = data;
+  socket.on("conn-prepare", (data) => {
+    const { connUserSocketId } = data;
 
-  //     webRTCHandler.prepareNewPeerConnection(connUserSocketId, false);
+    webRTCHandler.prepareNewPeerConnection(connUserSocketId, false);
 
-  //     // inform the user which just join the room that we have prepared for incoming connection
-  //     socket.emit("conn-init", { connUserSocketId: connUserSocketId });
-  //   });
+    // Inform the user which just join the room that we have prepared for incoming connection
+    socket?.emit("conn-init", { connUserSocketId: connUserSocketId });
+  });
 
   //   socket.on("conn-signal", (data) => {
   //     webRTCHandler.handleSignalingData(data);

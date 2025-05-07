@@ -184,16 +184,16 @@ const joinRoomHandler = (
   };
 
   // Join room as user which just is trying to join room passing room id
-  const room = rooms.find((room) => room.id === roomId) as Room;
+  const room = rooms.find((room: Room) => room.id === roomId) as Room;
   room.connectedUsers = [...room.connectedUsers, newUser];
 
   // Join socket.io room
   socket.join(roomId);
 
-  // add new user to connected users array
+  // Add new user to connected users array
   connectedUsers = [...connectedUsers, newUser];
 
-  // emit to all users which are already in this room to prepare peer connection
+  // Emit to all users which are already in this room to prepare peer connection
   room.connectedUsers.forEach((user: ConnectedUser) => {
     if (user.socketId !== socket.id) {
       const data = {
@@ -230,7 +230,7 @@ const disconnectHandler = (socket: Socket<DefaultEventsMap, DefaultEventsMap, De
         connectedUsers: room.connectedUsers,
       });
     } else {
-      rooms = rooms.filter((r) => r.id !== room.id);
+      rooms = rooms.filter((r: Room) => r.id !== room.id);
     }
   }
 };
