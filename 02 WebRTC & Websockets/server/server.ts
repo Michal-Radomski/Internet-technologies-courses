@@ -108,7 +108,7 @@ io.on("connection", (socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultE
 
   socket.on("conn-signal", (data) => {
     console.log("data:", data);
-    // signalingHandler(data, socket);
+    signalingHandler(data, socket);
   });
 
   socket.on("conn-init", (data) => {
@@ -233,4 +233,14 @@ const disconnectHandler = (socket: Socket<DefaultEventsMap, DefaultEventsMap, De
       rooms = rooms.filter((r: Room) => r.id !== room.id);
     }
   }
+};
+
+const signalingHandler = (
+  data: { connUserSocketId: string; signal: any },
+  socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
+) => {
+  const { connUserSocketId, signal } = data;
+
+  const signalingData = { signal, connUserSocketId: socket.id };
+  io.to(connUserSocketId).emit("conn-signal", signalingData);
 };
