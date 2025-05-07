@@ -103,7 +103,7 @@ io.on("connection", (socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultE
   });
 
   socket.on("disconnect", () => {
-    // disconnectHandler(socket);
+    disconnectHandler(socket);
   });
 
   socket.on("conn-signal", (data) => {
@@ -205,4 +205,32 @@ const joinRoomHandler = (
   });
 
   io.to(roomId).emit("room-update", { connectedUsers: room.connectedUsers });
+};
+
+const disconnectHandler = (socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>): void => {
+  // Find if user has been registered - if yes remove him from room and connected users array
+  const user = connectedUsers.find((user: ConnectedUser) => user.socketId === socket.id) as ConnectedUser;
+
+  if (user) {
+    // Remove user from room in server
+    const room = rooms.find((room: Room) => room.id === user.roomId) as Room;
+
+    room.connectedUsers = room.connectedUsers.filter((user: ConnectedUser) => user.socketId !== socket.id);
+
+    // Leave socket io room
+    socket.leave(user.roomId);
+
+    // Close the room if amount of the users which will stay in room will be 0
+    if (room.connectedUsers.length > 0) {
+      // Emit to all users which are still in the room that user disconnected
+      io.to(room.id).emit("user-disconnected", { socketId: socket.id });
+
+      // Emit an event to rest of the users which left in the room new connectedUsers in room
+      io.to(room.id).emit("room-update", {
+        connectedUsers: room.connectedUsers,
+      });
+    } else {
+      rooms = rooms.filter((r) => r.id !== room.id);
+    }
+  }
 };
