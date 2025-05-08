@@ -113,7 +113,7 @@ io.on("connection", (socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultE
 
   socket.on("conn-init", (data) => {
     console.log("data:", data);
-    // initializeConnectionHandler(data, socket);
+    initializeConnectionHandler(data, socket);
   });
 
   socket.on("direct-message", (data) => {
@@ -122,7 +122,7 @@ io.on("connection", (socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultE
   });
 });
 
-httpServer.listen({ port: portHTTP }, () => {
+httpServer.listen({ port: portHTTP }, (): void => {
   console.log(`🚀 Server is listening at http://localhost:${portHTTP}`);
   // For testing only
   console.log("Current Time:", new Date().toLocaleTimeString());
@@ -236,11 +236,23 @@ const disconnectHandler = (socket: Socket<DefaultEventsMap, DefaultEventsMap, De
 };
 
 const signalingHandler = (
-  data: { connUserSocketId: string; signal: any },
+  data: { connUserSocketId: string; signal: string },
   socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
 ) => {
   const { connUserSocketId, signal } = data;
+  console.log("signal:", signal);
 
   const signalingData = { signal, connUserSocketId: socket.id };
   io.to(connUserSocketId).emit("conn-signal", signalingData);
+};
+
+// Information from clients which are already in room that They have prepared for incoming connection
+const initializeConnectionHandler = (
+  data: { connUserSocketId: string },
+  socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
+) => {
+  const { connUserSocketId } = data;
+
+  const initData = { connUserSocketId: socket.id };
+  io.to(connUserSocketId).emit("conn-init", initData);
 };

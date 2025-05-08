@@ -112,10 +112,10 @@ export const prepareNewPeerConnection = (connUserSocketId: string, isInitiator: 
   // });
 };
 
-// export const handleSignalingData = (data) => {
-//   //add signaling data to peer connection
-//   peers[data.connUserSocketId].signal(data.signal);
-// };
+export const handleSignalingData = (data: { connUserSocketId: string; signal: Peer.SignalData }): void => {
+  // Add signaling data to peer connection
+  peers[data.connUserSocketId as keyof typeof peers].signal(data.signal);
+};
 
 // export const removePeerConnection = (data) => {
 //   const { socketId } = data;
@@ -139,7 +139,7 @@ export const prepareNewPeerConnection = (connUserSocketId: string, isInitiator: 
 //   }
 // };
 
-// ////////////////////////////////// UI Videos //////////////////////////////////
+//* UI Videos
 const showLocalVideoPreview = (stream: MediaStream): void => {
   const videosContainer = document.getElementById("videos_portal") as HTMLDivElement;
   videosContainer.classList.add("videos_portal_styles");
@@ -215,8 +215,7 @@ const getAudioOnlyLabel = (identity = ""): HTMLDivElement => {
   return labelContainer;
 };
 
-// ////////////////////////////////// Buttons logic //////////////////////////////////
-
+//* Buttons logic
 // export const toggleMic = (isMuted) => {
 //   localStream.getAudioTracks()[0].enabled = isMuted ? true : false;
 // };
@@ -256,7 +255,7 @@ const getAudioOnlyLabel = (identity = ""): HTMLDivElement => {
 //   }
 // };
 
-// ////////////////////////////////// Messages /////////////////////////////////////
+//* Messages
 // const appendNewMessage = (messageData) => {
 //   const messages = store.getState().messages;
 //   store([...messages, messageData]));

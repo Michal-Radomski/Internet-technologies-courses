@@ -21,17 +21,17 @@ export const connectWithSocketIOServer = (): void => {
     store.dispatch(setSocketId(socket?.id as string));
   });
 
-  socket.on("room-id", (data) => {
+  socket.on("room-id", (data): void => {
     const { roomId }: { roomId: string } = data;
     store.dispatch(setRoomId(roomId));
   });
 
-  socket.on("room-update", (data) => {
+  socket.on("room-update", (data): void => {
     const { connectedUsers }: { connectedUsers: Participant[] } = data;
     store.dispatch(setParticipants(connectedUsers));
   });
 
-  socket.on("conn-prepare", (data) => {
+  socket.on("conn-prepare", (data): void => {
     const { connUserSocketId } = data;
 
     webRTCHandler.prepareNewPeerConnection(connUserSocketId, false);
@@ -40,14 +40,14 @@ export const connectWithSocketIOServer = (): void => {
     socket?.emit("conn-init", { connUserSocketId: connUserSocketId });
   });
 
-  //   socket.on("conn-signal", (data) => {
-  //     webRTCHandler.handleSignalingData(data);
-  //   });
+  socket.on("conn-signal", (data): void => {
+    webRTCHandler.handleSignalingData(data);
+  });
 
-  //   socket.on("conn-init", (data) => {
-  //     const { connUserSocketId } = data;
-  //     webRTCHandler.prepareNewPeerConnection(connUserSocketId, true);
-  //   });
+  socket.on("conn-init", (data): void => {
+    const { connUserSocketId } = data;
+    webRTCHandler.prepareNewPeerConnection(connUserSocketId, true);
+  });
 
   //   socket.on("user-disconnected", (data) => {
   //     webRTCHandler.removePeerConnection(data);
