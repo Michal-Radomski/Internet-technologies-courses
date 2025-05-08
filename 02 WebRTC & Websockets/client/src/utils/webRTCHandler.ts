@@ -219,18 +219,15 @@ const getAudioOnlyLabel = (identity = ""): HTMLDivElement => {
 };
 
 //* Buttons logic
-// export const toggleMic = (isMuted) => {
-//   localStream.getAudioTracks()[0].enabled = isMuted ? true : false;
-// };
+export const toggleMic = (isMuted: boolean): void => {
+  (localStream as MediaStream).getAudioTracks()[0].enabled = isMuted ? true : false;
+};
 
-// export const toggleCamera = (isDisabled) => {
-//   localStream.getVideoTracks()[0].enabled = isDisabled ? true : false;
-// };
+export const toggleCamera = (isDisabled: boolean): void => {
+  (localStream as MediaStream).getVideoTracks()[0].enabled = isDisabled ? true : false;
+};
 
-// export const toggleScreenShare = (
-//   isScreenSharingActive,
-//   screenSharingStream = null
-// ) => {
+// export const toggleScreenShare = (isScreenSharingActive: boolean, screenSharingStream = null) => {
 //   if (isScreenSharingActive) {
 //     switchVideoTracks(localStream);
 //   } else {
@@ -238,7 +235,7 @@ const getAudioOnlyLabel = (identity = ""): HTMLDivElement => {
 //   }
 // };
 
-// const switchVideoTracks = (stream) => {
+// const switchVideoTracks = (stream:MediaStream) => {
 //   for (let socket_id in peers) {
 //     for (let index in peers[socket_id].streams[0].getTracks()) {
 //       for (let index2 in stream.getTracks()) {

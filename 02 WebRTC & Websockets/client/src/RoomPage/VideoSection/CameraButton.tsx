@@ -2,13 +2,13 @@ import React from "react";
 
 import CameraButtonImg from "../../resources/images/camera.svg";
 import CameraButtonImgOff from "../../resources/images/cameraOff.svg";
-// import * as webRTCHandler from "../../utils/webRTCHandler";
+import * as webRTCHandler from "../../utils/webRTCHandler";
 
 const CameraButton = (): JSX.Element => {
   const [isLocalVideoDisabled, setIsLocalVideoDisabled] = React.useState<boolean>(false);
 
   const handleCameraButtonPressed = (): void => {
-    // webRTCHandler.toggleCamera(isLocalVideoDisabled);
+    webRTCHandler.toggleCamera(isLocalVideoDisabled);
 
     setIsLocalVideoDisabled(!isLocalVideoDisabled);
   };
