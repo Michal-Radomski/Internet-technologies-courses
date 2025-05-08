@@ -49,9 +49,9 @@ export const connectWithSocketIOServer = (): void => {
     webRTCHandler.prepareNewPeerConnection(connUserSocketId, true);
   });
 
-  //   socket.on("user-disconnected", (data) => {
-  //     webRTCHandler.removePeerConnection(data);
-  //   });
+  socket.on("user-disconnected", (data) => {
+    webRTCHandler.removePeerConnection(data);
+  });
 
   //   socket.on("direct-message", (data) => {
   //     appendNewMessageToChatHistory(data);

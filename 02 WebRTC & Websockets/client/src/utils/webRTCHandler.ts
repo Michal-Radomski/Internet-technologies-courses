@@ -7,9 +7,10 @@ import { Participant } from "../Interfaces";
 
 const defaultConstraints = {
   audio: true,
+  // video: true,
   video: {
-    width: "480",
-    height: "360",
+    width: 480,
+    height: 360,
   },
 };
 
@@ -52,7 +53,7 @@ export const getLocalPreviewAndInitRoomConnection = async (
     });
 };
 
-const peers = {} as { connUserSocketId: Peer.Instance };
+const peers = {} as { [key: string]: Peer.Instance | undefined };
 let streams = [] as MediaStream[];
 
 const getConfiguration = () => {
@@ -91,7 +92,7 @@ export const prepareNewPeerConnection = (connUserSocketId: string, isInitiator: 
     channelName: messengerChannel,
   });
 
-  peers[connUserSocketId as keyof typeof peers].on("signal", (data) => {
+  peers[connUserSocketId as keyof typeof peers]?.on("signal", (data) => {
     // WebRTC offer, webRTC Answer (SDP information), ice candidates
     const signalData = {
       signal: data,
@@ -100,7 +101,7 @@ export const prepareNewPeerConnection = (connUserSocketId: string, isInitiator: 
     wss.signalPeerData(signalData);
   });
 
-  peers[connUserSocketId as keyof typeof peers].on("stream", (stream: MediaStream): void => {
+  peers[connUserSocketId as keyof typeof peers]?.on("stream", (stream: MediaStream): void => {
     console.log("new stream came");
     addStream(stream, connUserSocketId);
     streams = [...streams, stream];
@@ -114,30 +115,31 @@ export const prepareNewPeerConnection = (connUserSocketId: string, isInitiator: 
 
 export const handleSignalingData = (data: { connUserSocketId: string; signal: Peer.SignalData }): void => {
   // Add signaling data to peer connection
-  peers[data.connUserSocketId as keyof typeof peers].signal(data.signal);
+  peers[data.connUserSocketId as keyof typeof peers]?.signal(data.signal);
 };
 
-// export const removePeerConnection = (data) => {
-//   const { socketId } = data;
-//   const videoContainer = document.getElementById(socketId);
-//   const videoEl = document.getElementById(`${socketId}-video`);
+export const removePeerConnection = (data: { socketId: string }): void => {
+  const { socketId } = data;
+  const videoContainer = document.getElementById(socketId) as HTMLDivElement;
+  const videoEl = document.getElementById(`${socketId}-video`) as HTMLVideoElement;
 
-//   if (videoContainer && videoEl) {
-//     const tracks = videoEl.srcObject.getTracks();
+  if (videoContainer && videoEl) {
+    const tracks: MediaStreamTrack[] = (videoEl.srcObject as MediaStream)?.getTracks();
+    // console.log("tracks:", tracks);
 
-//     tracks.forEach((t) => t.stop());
+    tracks.forEach((t: MediaStreamTrack) => t.stop());
 
-//     videoEl.srcObject = null;
-//     videoContainer.removeChild(videoEl);
+    videoEl.srcObject = null;
+    videoContainer.removeChild(videoEl);
 
-//     videoContainer.parentNode.removeChild(videoContainer);
+    videoContainer.parentNode?.removeChild(videoContainer);
 
-//     if (peers[socketId]) {
-//       peers[socketId].destroy();
-//     }
-//     delete peers[socketId];
-//   }
-// };
+    if (peers[socketId as keyof typeof peers]) {
+      peers[socketId as keyof typeof peers]?.destroy();
+    }
+    delete peers[socketId as keyof typeof peers];
+  }
+};
 
 //* UI Videos
 const showLocalVideoPreview = (stream: MediaStream): void => {
@@ -170,7 +172,7 @@ const addStream = (stream: MediaProvider, connUserSocketId: string): void => {
   videoContainer.id = connUserSocketId;
 
   videoContainer.classList.add("video_track_container");
-  const videoElement = document.createElement("video");
+  const videoElement = document.createElement("video") as HTMLVideoElement;
   videoElement.autoplay = true;
   videoElement.srcObject = stream;
   videoElement.id = `${connUserSocketId}-video`;
@@ -193,7 +195,8 @@ const addStream = (stream: MediaProvider, connUserSocketId: string): void => {
   const participants = store.getState().participants as Participant[];
 
   const participant = participants.find((p: Participant) => p.socketId === connUserSocketId) as Participant;
-  console.log(participant);
+  console.log("participant:", participant);
+
   if (participant?.onlyAudio) {
     videoContainer.appendChild(getAudioOnlyLabel(participant.identity));
   } else {
