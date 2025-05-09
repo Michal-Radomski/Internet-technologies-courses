@@ -7,6 +7,7 @@ import JoinRoomPage from "./JoinRoomPage/JoinRoomPage";
 import RoomPage from "./RoomPage/RoomPage";
 import { connectWithSocketIOServer } from "./utils/wss";
 
+// Todo: fix the bugs!
 const App = (): JSX.Element => {
   React.useEffect(() => {
     connectWithSocketIOServer();

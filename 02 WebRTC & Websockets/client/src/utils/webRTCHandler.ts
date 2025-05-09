@@ -259,7 +259,7 @@ const appendNewMessage = (messageData: Message): void => {
 };
 
 export const sendMessageUsingDataChannel = (messageContent: string): void => {
-  // append this message locally
+  // Append this message locally
   const identity = store.getState().identity as string;
 
   const localMessageData = {
