@@ -18,7 +18,7 @@ const SwitchToScreenSharingButton = (): JSX.Element => {
       let stream = null;
       try {
         stream = (await navigator.mediaDevices.getDisplayMedia(constraints)) as MediaStream;
-        console.log("stream:", stream);
+        // console.log("stream:", stream);
       } catch (err) {
         console.log("error occurred when trying to get an access to screen share stream", err);
       }
@@ -34,7 +34,7 @@ const SwitchToScreenSharingButton = (): JSX.Element => {
       setIsScreenSharingActive(false);
 
       // Stop screen share stream
-      screenSharingStream?.getTracks().forEach((t) => t.stop());
+      screenSharingStream?.getTracks().forEach((track: MediaStreamTrack) => track.stop());
       setScreenSharingStream(null);
     }
   };
@@ -44,7 +44,7 @@ const SwitchToScreenSharingButton = (): JSX.Element => {
       <div className="video_button_container">
         <img src={SwitchImg} onClick={handleScreenShareToggle} className="video_button_image" />
       </div>
-      {isScreenSharingActive ? <LocalScreenSharingPreview stream={screenSharingStream} /> : null}
+      {isScreenSharingActive ? <LocalScreenSharingPreview stream={screenSharingStream as MediaStream} /> : null}
     </React.Fragment>
   );
 };

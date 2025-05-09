@@ -1,22 +1,26 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 
-const LocalScreenSharingPreview = ({ stream }) => {
-  const localPreviewRef = useRef();
+const LocalScreenSharingPreview = ({ stream }: { stream: MediaStream }): JSX.Element => {
+  const localPreviewRef = React.useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    const video = localPreviewRef.current;
+  React.useEffect(() => {
+    if (localPreviewRef?.current) {
+      const video = localPreviewRef.current as HTMLVideoElement;
 
-    video.srcObject = stream;
+      video.srcObject = stream;
 
-    video.onloadedmetadata = () => {
-      video.play();
-    };
+      video.onloadedmetadata = (): void => {
+        video.play();
+      };
+    }
   }, [stream]);
 
   return (
-    <div className="local_screen_share_preview">
-      <video muted autoPlay ref={localPreviewRef}></video>
-    </div>
+    <React.Fragment>
+      <div className="local_screen_share_preview">
+        <video muted autoPlay ref={localPreviewRef}></video>
+      </div>
+    </React.Fragment>
   );
 };
 
