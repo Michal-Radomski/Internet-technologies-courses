@@ -227,33 +227,30 @@ export const toggleCamera = (isDisabled: boolean): void => {
   (localStream as MediaStream).getVideoTracks()[0].enabled = isDisabled ? true : false;
 };
 
-// export const toggleScreenShare = (isScreenSharingActive: boolean, screenSharingStream = null) => {
-//   if (isScreenSharingActive) {
-//     switchVideoTracks(localStream);
-//   } else {
-//     switchVideoTracks(screenSharingStream);
-//   }
-// };
+export const toggleScreenShare = (isScreenSharingActive: boolean, screenSharingStream: MediaStream | null = null): void => {
+  if (isScreenSharingActive) {
+    switchVideoTracks(localStream as MediaStream);
+  } else {
+    switchVideoTracks(screenSharingStream as unknown as MediaStream);
+  }
+};
 
-// const switchVideoTracks = (stream:MediaStream) => {
-//   for (let socket_id in peers) {
-//     for (let index in peers[socket_id].streams[0].getTracks()) {
-//       for (let index2 in stream.getTracks()) {
-//         if (
-//           peers[socket_id].streams[0].getTracks()[index].kind ===
-//           stream.getTracks()[index2].kind
-//         ) {
-//           peers[socket_id].replaceTrack(
-//             peers[socket_id].streams[0].getTracks()[index],
-//             stream.getTracks()[index2],
-//             peers[socket_id].streams[0]
-//           );
-//           break;
-//         }
-//       }
-//     }
-//   }
-// };
+const switchVideoTracks = (stream: MediaStream): void => {
+  for (const socket_id in peers) {
+    for (const index in peers[socket_id]?.streams[0].getTracks()) {
+      for (const index2 in stream.getTracks()) {
+        if (peers[socket_id].streams[0].getTracks()[index as unknown as number].kind === stream.getTracks()[index2].kind) {
+          peers[socket_id].replaceTrack(
+            peers[socket_id].streams[0].getTracks()[index as unknown as number],
+            stream.getTracks()[index2],
+            peers[socket_id].streams[0]
+          );
+          break;
+        }
+      }
+    }
+  }
+};
 
 //* Messages
 // const appendNewMessage = (messageData) => {

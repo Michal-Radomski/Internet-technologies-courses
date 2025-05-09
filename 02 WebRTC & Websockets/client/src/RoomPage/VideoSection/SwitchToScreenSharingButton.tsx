@@ -2,7 +2,7 @@ import React from "react";
 
 import SwitchImg from "../../resources/images/switchToScreenSharing.svg";
 import LocalScreenSharingPreview from "./LocalScreenSharingPreview";
-// import * as webRTCHandler from "../../utils/webRTCHandler";
+import * as webRTCHandler from "../../utils/webRTCHandler";
 
 const constraints = {
   audio: false,
@@ -18,22 +18,23 @@ const SwitchToScreenSharingButton = (): JSX.Element => {
       let stream = null;
       try {
         stream = (await navigator.mediaDevices.getDisplayMedia(constraints)) as MediaStream;
+        console.log("stream:", stream);
       } catch (err) {
         console.log("error occurred when trying to get an access to screen share stream", err);
       }
       if (stream) {
         setScreenSharingStream(stream);
 
-        // webRTCHandler.toggleScreenShare(isScreenSharingActive, stream);
+        webRTCHandler.toggleScreenShare(isScreenSharingActive, stream);
         setIsScreenSharingActive(true);
-        // execute here function to switch the video track which we are sending to other users
+        // Execute here function to switch the video track which we are sending to other users
       }
     } else {
-      // webRTCHandler.toggleScreenShare(isScreenSharingActive);
+      webRTCHandler.toggleScreenShare(isScreenSharingActive);
       setIsScreenSharingActive(false);
 
-      // stop screen share stream
-      // screenSharingStream.getTracks().forEach((t) => t.stop());
+      // Stop screen share stream
+      screenSharingStream?.getTracks().forEach((t) => t.stop());
       setScreenSharingStream(null);
     }
   };
