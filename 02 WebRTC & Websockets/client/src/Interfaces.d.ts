@@ -14,3 +14,11 @@ export interface Participant {
   identity: string;
   socketId: string;
 }
+
+export interface Message {
+  content: string;
+  identity?: string;
+  messageCreatedByMe: boolean;
+  author?: string;
+  sameAuthor?: boolean;
+}

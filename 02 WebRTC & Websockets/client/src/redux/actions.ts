@@ -1,4 +1,4 @@
-import { Participant } from "../Interfaces";
+import { Message, Participant } from "../Interfaces";
 
 const Actions = {
   SET_IS_ROOM_HOST: "SET_IS_ROOM_HOST",
@@ -57,12 +57,12 @@ export const setParticipants = (participants: Participant[]) => {
   };
 };
 
-// export const setMessages = (messages: any) => {
-//   return {
-//     type: Actions.SET_MESSAGES,
-//     messages,
-//   };
-// };
+export const setMessages = (messages: Message[]) => {
+  return {
+    type: Actions.SET_MESSAGES,
+    messages,
+  };
+};
 
 export const setActiveConversation = (activeConversation: boolean) => {
   return {
@@ -71,7 +71,7 @@ export const setActiveConversation = (activeConversation: boolean) => {
   };
 };
 
-// export const setDirectChatHistory = (directChatHistory: any) => {
+// export const setDirectChatHistory = (directChatHistory: Message[]) => {
 //   return {
 //     type: Actions.SET_DIRECT_CHAT_HISTORY,
 //     directChatHistory,

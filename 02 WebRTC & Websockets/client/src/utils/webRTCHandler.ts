@@ -1,9 +1,9 @@
 import Peer from "simple-peer";
 
-import { setShowOverlay } from "../redux/actions";
+import { setMessages, setShowOverlay } from "../redux/actions";
 import { store } from "../redux/store";
 import * as wss from "./wss";
-import { Participant } from "../Interfaces";
+import { Message, Participant } from "../Interfaces";
 
 const defaultConstraints = {
   audio: true,
@@ -107,10 +107,10 @@ export const prepareNewPeerConnection = (connUserSocketId: string, isInitiator: 
     streams = [...streams, stream];
   });
 
-  // peers[connUserSocketId].on("data", (data) => {
-  //   const messageData = JSON.parse(data);
-  //   appendNewMessage(messageData);
-  // });
+  peers[connUserSocketId]?.on("data", (data) => {
+    const messageData = JSON.parse(data);
+    appendNewMessage(messageData);
+  });
 };
 
 export const handleSignalingData = (data: { connUserSocketId: string; signal: Peer.SignalData }): void => {
@@ -231,7 +231,7 @@ export const toggleScreenShare = (isScreenSharingActive: boolean, screenSharingS
   if (isScreenSharingActive) {
     switchVideoTracks(localStream as MediaStream);
   } else {
-    switchVideoTracks(screenSharingStream as unknown as MediaStream);
+    switchVideoTracks(screenSharingStream as MediaStream);
   }
 };
 
@@ -253,30 +253,30 @@ const switchVideoTracks = (stream: MediaStream): void => {
 };
 
 //* Messages
-// const appendNewMessage = (messageData) => {
-//   const messages = store.getState().messages;
-//   store([...messages, messageData]));
-// };
+const appendNewMessage = (messageData: Message): void => {
+  const messages = store.getState().messages as Message[];
+  store.dispatch(setMessages([...messages, messageData]));
+};
 
-// export const sendMessageUsingDataChannel = (messageContent) => {
-//   // append this message locally
-//   const identity = store.getState().identity;
+export const sendMessageUsingDataChannel = (messageContent: string): void => {
+  // append this message locally
+  const identity = store.getState().identity as string;
 
-//   const localMessageData = {
-//     content: messageContent,
-//     identity,
-//     messageCreatedByMe: true,
-//   };
+  const localMessageData = {
+    content: messageContent,
+    identity,
+    messageCreatedByMe: true,
+  };
 
-//   appendNewMessage(localMessageData);
+  appendNewMessage(localMessageData);
 
-//   const messageData = {
-//     content: messageContent,
-//     identity,
-//   };
+  const messageData = {
+    content: messageContent,
+    identity,
+  };
 
-//   const stringifiedMessageData = JSON.stringify(messageData);
-//   for (let socketId in peers) {
-//     peers[socketId].send(stringifiedMessageData);
-//   }
-// };
+  const stringifiedMessageData = JSON.stringify(messageData);
+  for (const socketId in peers) {
+    peers[socketId]?.send(stringifiedMessageData);
+  }
+};
