@@ -2,7 +2,7 @@ import React from "react";
 
 import ParticipantsLabel from "./ParticipantsLabel";
 import Participants from "./Participants";
-// import DirectChat from './DirectChat/DirectChat';
+import DirectChat from "./DirectChat/DirectChat";
 
 const ParticipantsSection = (): JSX.Element => {
   return (
@@ -10,7 +10,7 @@ const ParticipantsSection = (): JSX.Element => {
       <div className="participants_section_container">
         <ParticipantsLabel />
         <Participants />
-        {/* <DirectChat /> */}
+        <DirectChat />
       </div>
     </React.Fragment>
   );

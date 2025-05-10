@@ -71,12 +71,12 @@ export const setActiveConversation = (activeConversation: boolean) => {
   };
 };
 
-// export const setDirectChatHistory = (directChatHistory: Message[]) => {
-//   return {
-//     type: Actions.SET_DIRECT_CHAT_HISTORY,
-//     directChatHistory,
-//   };
-// };
+export const setDirectChatHistory = (directChatHistory: Message[]) => {
+  return {
+    type: Actions.SET_DIRECT_CHAT_HISTORY,
+    directChatHistory,
+  };
+};
 
 export const setSocketId = (socketId: string) => {
   return {

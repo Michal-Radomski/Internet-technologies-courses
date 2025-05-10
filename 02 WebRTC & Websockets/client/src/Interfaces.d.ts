@@ -16,6 +16,8 @@ export interface Participant {
 }
 
 export interface Message {
+  isAuthor?: boolean;
+  messageContent?: string;
   content: string;
   identity?: string;
   messageCreatedByMe: boolean;

@@ -6,7 +6,7 @@ import { store } from "../redux/store";
 import { Participant } from "../Interfaces";
 import * as webRTCHandler from "./webRTCHandler";
 import { SignalData } from "simple-peer";
-// import { appendNewMessageToChatHistory } from "./directMessages";
+import { appendNewMessageToChatHistory } from "./directMessages";
 
 const SERVER = "http://localhost:5000";
 
@@ -53,9 +53,9 @@ export const connectWithSocketIOServer = (): void => {
     webRTCHandler.removePeerConnection(data);
   });
 
-  //   socket.on("direct-message", (data) => {
-  //     appendNewMessageToChatHistory(data);
-  //   });
+  socket.on("direct-message", (data) => {
+    appendNewMessageToChatHistory(data);
+  });
 };
 
 export const createNewRoom = (identity: string, onlyAudio: boolean): void => {
@@ -83,6 +83,6 @@ export const signalPeerData = (data: { signal: SignalData; connUserSocketId: str
   socket?.emit("conn-signal", data);
 };
 
-// export const sendDirectMessage = (data) => {
-//   socket?.emit("direct-message", data);
-// };
+export const sendDirectMessage = (data: { receiverSocketId: string; identity: string; messageContent: string }): void => {
+  socket?.emit("direct-message", data);
+};
