@@ -9,10 +9,11 @@ import bodyParser from "body-parser";
 import morgan from "morgan";
 import helmet from "helmet";
 import compression from "compression";
-// import twilio from "twilio";
+import twilio, { Twilio } from "twilio";
 import { v4 as uuidv4 } from "uuid";
 import { DefaultEventsMap, Server, Socket } from "socket.io";
 import { ConnectedUser, Room } from "./Interfaces";
+import { TokenInstance } from "twilio/lib/rest/api/v2010/account/token";
 // console.log("twilio:", twilio);
 // console.log("uuidv4():", uuidv4());
 
@@ -73,6 +74,26 @@ app.get("/api/room-exists/:roomId", (req: Request, res: Response) => {
   } else {
     // Send response that room does not exists
     return res.send({ roomExists: false });
+  }
+});
+
+app.get("/api/get-turn-credentials", (req: Request, res: Response) => {
+  console.log("req.ip:", req.ip);
+
+  const accountSid = process.env.accountSid as string;
+  const authToken = process.env.authToken as string;
+
+  const client: Twilio = twilio(accountSid, authToken);
+
+  res.send({ token: null });
+  try {
+    client.tokens.create().then((token: TokenInstance) => {
+      res.send({ token });
+    });
+  } catch (err) {
+    console.log("error occurred when fetching turn server credentials");
+    console.log("err:", err);
+    res.send({ token: null });
   }
 });
 
