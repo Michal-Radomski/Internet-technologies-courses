@@ -4,6 +4,7 @@ import { setMessages, setShowOverlay } from "../redux/actions";
 import { store } from "../redux/store";
 import * as wss from "./wss";
 import { Message, Participant } from "../Interfaces";
+// import { fetchTURNCredentials, getTurnIceServers } from "./turn";
 
 const defaultConstraints = {
   audio: true,
@@ -61,6 +62,7 @@ const getConfiguration = () => {
   const turnIceServers = false;
 
   if (turnIceServers) {
+    console.log("turnIceServers:", turnIceServers);
     return {
       iceServers: [
         {
