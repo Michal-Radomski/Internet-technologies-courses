@@ -139,7 +139,7 @@ io.on("connection", (socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultE
 
   socket.on("direct-message", (data) => {
     console.log("data:", data);
-    // directMessageHandler(data, socket);
+    directMessageHandler(data, socket);
   });
 });
 
@@ -276,4 +276,28 @@ const initializeConnectionHandler = (
 
   const initData = { connUserSocketId: socket.id };
   io.to(connUserSocketId).emit("conn-init", initData);
+};
+
+const directMessageHandler = (
+  data: { receiverSocketId: string; messageContent: string; identity: string },
+  socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
+): void => {
+  if (connectedUsers.find((connUser: ConnectedUser) => connUser.socketId === data.receiverSocketId)) {
+    const receiverData = {
+      authorSocketId: socket.id,
+      messageContent: data.messageContent,
+      isAuthor: false,
+      identity: data.identity,
+    };
+    socket.to(data.receiverSocketId).emit("direct-message", receiverData);
+
+    const authorData = {
+      receiverSocketId: data.receiverSocketId,
+      messageContent: data.messageContent,
+      isAuthor: true,
+      identity: data.identity,
+    };
+
+    socket.emit("direct-message", authorData);
+  }
 };
