@@ -29,6 +29,8 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/simple-peer": "^9.11.8",
     "@vitejs/plugin-react": "^4.3.4",
+    "browserslist": "^4.24.5",
+    "browserslist-to-esbuild": "^2.1.1",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
